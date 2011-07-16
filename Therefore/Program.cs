@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Therefore.Engine;
     using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser;
 
@@ -13,9 +14,13 @@
             Console.WriteLine("Enter an expression:");
             string source = Console.ReadLine();
 
+            Expression expression;
+            var nameTable = new List<string>();
+
             try
             {
                 var parseTree = Parser.Parse(source);
+                expression = Compiler.Compile(parseTree, nameTable);
             }
             catch (ParseException ex)
             {
@@ -32,9 +37,7 @@
                 return;
             }
 
-            var expression = And(And(A, Not(B)), Or(C, Not(C)));
-
-            var values = Solve(expression, 3);
+            var values = Solve(expression, nameTable.Count);
 
             if (values == null)
             {
@@ -44,7 +47,7 @@
             {
                 for (int i = 0; i < values.Length; i++)
                 {
-                    Console.WriteLine("{0} = {1}", (char)('A' + i), values[i]);
+                    Console.WriteLine("{0}\t= {1}", nameTable[i], values[i]);
                 }
             }
         }
@@ -107,53 +110,6 @@
             }
 
             return results;
-        }
-
-        public static AndExpression And(Expression left, Expression right)
-        {
-            return new AndExpression(left, right);
-        }
-
-        public static OrExpression Or(Expression left, Expression right)
-        {
-            return new OrExpression(left, right);
-        }
-
-        public static NotExpression Not(Expression operand)
-        {
-            return new NotExpression(operand);
-        }
-
-        public static VariableExpression A
-        {
-            get
-            {
-                return new VariableExpression(0);
-            }
-        }
-
-        public static VariableExpression B
-        {
-            get
-            {
-                return new VariableExpression(1);
-            }
-        }
-
-        public static VariableExpression C
-        {
-            get
-            {
-                return new VariableExpression(2);
-            }
-        }
-
-        public static VariableExpression D
-        {
-            get
-            {
-                return new VariableExpression(3);
-            }
         }
     }
 }
