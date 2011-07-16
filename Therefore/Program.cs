@@ -4,11 +4,38 @@
     using System.Collections.Generic;
     using System.Linq;
     using Therefore.Engine.Expressions;
+    using Therefore.Engine.Parser;
 
     class Program
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Enter an expression:");
+            string source = Console.ReadLine();
+
+            try
+            {
+                var tokens = Scanner.Scan(source).ToList();
+                foreach (var token in tokens)
+                {
+                    Console.WriteLine("{0} = '{1}'", token.TokenType, token.Value);
+                }
+            }
+            catch (ParseException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine();
+                Console.Write(source.Substring(0, ex.Offset));
+                var prevColor = Console.BackgroundColor;
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.Write(ex.Offset == source.Length ? " " : source.Substring(ex.Offset, 1));
+                Console.BackgroundColor = prevColor;
+                Console.Write(ex.Offset == source.Length ? "" : source.Substring(ex.Offset + 1));
+                Console.WriteLine();
+                Console.WriteLine();
+                return;
+            }
+
             var expression = And(And(A, Not(B)), Or(C, Not(C)));
 
             var values = Solve(expression, 3);

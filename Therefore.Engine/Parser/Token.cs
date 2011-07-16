@@ -38,5 +38,13 @@
         {
             get { return this.span; }
         }
+
+        public string Value
+        {
+            get
+            {
+                return this.Span.Source.Substring(this.Span.Start, this.Span.Length);
+            }
+        }
     }
 }
