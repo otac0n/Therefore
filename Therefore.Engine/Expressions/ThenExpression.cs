@@ -20,5 +20,10 @@
 
             return !leftResult | this.right.Evaluate(variables);
         }
+
+        public override string ToString()
+        {
+            return string.Format("Then({0}, {1})", this.left, this.right);
+        }
     }
 }

@@ -30,5 +30,10 @@
 
             return variables[this.variable];
         }
+
+        public override string ToString()
+        {
+            return "$" + this.variable;
+        }
     }
 }

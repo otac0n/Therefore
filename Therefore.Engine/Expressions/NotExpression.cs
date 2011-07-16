@@ -27,5 +27,10 @@
 
             return !result;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Not({0})", this.operand);
+        }
     }
 }
