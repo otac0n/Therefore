@@ -15,11 +15,7 @@
 
             try
             {
-                var tokens = Scanner.Scan(source).ToList();
-                foreach (var token in tokens)
-                {
-                    Console.WriteLine("{0} = '{1}'", token.TokenType, token.Value);
-                }
+                var parseTree = Parser.Parse(source);
             }
             catch (ParseException ex)
             {
