@@ -1,19 +1,19 @@
 ﻿namespace Therefore.Engine
 {
     using System;
+    using System.Collections.Generic;
     using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser;
     using Therefore.Engine.Parser.Nodes;
-    using System.Collections.Generic;
 
     public static class Compiler
     {
-        public static Expression Compile(ParseTree parseTree, IList<string> nameTable)
+        public static Expression Compile(ParseTree parseTree, IList<string> names, IEqualityComparer<string> nameComparison = null)
         {
-            return Compile(parseTree.RootNode, nameTable);
+            return Compile(parseTree.RootNode, new NameTable(names, nameComparison));
         }
 
-        private static Expression Compile(ParseTreeNode parseTreeNode, IList<string> nameTable)
+        private static Expression Compile(ParseTreeNode parseTreeNode, NameTable nameTable)
         {
             var binNode = parseTreeNode as BinaryOperatorNode;
             if (binNode != null)
@@ -42,7 +42,7 @@
             throw new NotImplementedException("Unknown node type '" + parseTreeNode.GetType().Name + "'.");
         }
 
-        private static Expression CompileBinaryOperator(BinaryOperatorNode binNode, IList<string> nameTable)
+        private static Expression CompileBinaryOperator(BinaryOperatorNode binNode, NameTable nameTable)
         {
             var left = Compile(binNode.Left, nameTable);
 
@@ -66,7 +66,7 @@
             throw new NotImplementedException("Unknown binary operator '" + binNode.Operator.Value + "'.");
         }
 
-        private static Expression CompileUnaryOperator(UnaryOperatorNode unNode, IList<string> nameTable)
+        private static Expression CompileUnaryOperator(UnaryOperatorNode unNode, NameTable nameTable)
         {
             var operand = Compile(unNode.Operand, nameTable);
 
@@ -79,23 +79,54 @@
             throw new NotImplementedException("Unknown unary operator '" + unNode.Operator.Value + "'.");
         }
 
-        private static Expression CompileParenthesisNode(ParenthesisNode parenNode, IList<string> nameTable)
+        private static Expression CompileParenthesisNode(ParenthesisNode parenNode, NameTable nameTable)
         {
             return Compile(parenNode.Contained, nameTable);
         }
 
-        private static Expression CompileVariableNode(VariableNode varNode, IList<string> nameTable)
+        private static Expression CompileVariableNode(VariableNode varNode, NameTable nameTable)
         {
             string name = varNode.Variable.Value;
+            var index = nameTable.GetName(name);
+            return new VariableExpression(index);
+        }
 
-            var index = nameTable.IndexOf(name);
-            if (index == -1)
+        private class NameTable
+        {
+            private readonly IList<string> names;
+            private readonly IEqualityComparer<string> comparison;
+
+            public NameTable(IList<string> names, IEqualityComparer<string> comparison)
             {
-                index = nameTable.Count;
-                nameTable.Add(name);
+                if (names == null)
+                {
+                    throw new ArgumentNullException("names");
+                }
+
+                this.names = names;
+
+                if (comparison == null)
+                {
+                    comparison = EqualityComparer<string>.Default;
+                }
+
+                this.comparison = comparison;
             }
 
-            return new VariableExpression(index);
+            public int GetName(string name)
+            {
+                var count = names.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    if (this.comparison.Equals(names[i], name))
+                    {
+                        return i;
+                    }
+                }
+
+                names.Add(name);
+                return count;
+            }
         }
     }
 }
