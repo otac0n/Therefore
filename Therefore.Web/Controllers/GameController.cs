@@ -9,6 +9,8 @@
     using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser;
     using Therefore.Engine;
+    using System.Web.Script.Serialization;
+    using Therefore.Engine.Game;
 
     public class GameController : Controller
     {
@@ -56,6 +58,12 @@
                 {
                     var premiseTree = Parser.Parse(premiseText);
                     debugInfo[key + " Parse Tree"] = ToJson(premiseTree);
+
+                    var constraintViolations = new ConstraintVisior(new ParenthesizedNotConstraint()).Visit(premiseTree).ToList();
+                    foreach (var violation in constraintViolations)
+                    {
+                        ModelState.AddModelError(key, violation.Message);
+                    }
 
                     var premiseExpr = Compiler.Compile(premiseTree, nameTable, StringComparer.OrdinalIgnoreCase);
                     debugInfo[key + " Expression Tree"] = premiseExpr;
