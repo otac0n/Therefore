@@ -55,7 +55,7 @@
                 try
                 {
                     var premiseTree = Parser.Parse(premiseText);
-                    debugInfo[key + " Parse Tree"] = premiseTree;
+                    debugInfo[key + " Parse Tree"] = ToJson(premiseTree);
 
                     var premiseExpr = Compiler.Compile(premiseTree, nameTable, StringComparer.OrdinalIgnoreCase);
                     debugInfo[key + " Expression Tree"] = premiseExpr;
@@ -96,6 +96,30 @@
             }
 
             return View(board);
+        }
+
+        [HttpGet]
+        public ActionResult Parse(string statement)
+        {
+            object data;
+            try
+            {
+                data = Parser.Parse(statement);
+            }
+            catch (ParseException ex)
+            {
+                data = new { Error = ex.Message, ex.Offset };
+            }
+
+            var result = Json(data);
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return result;
+        }
+
+        private string ToJson(ParseTree tree)
+        {
+            var ser = new JavaScriptSerializer();
+            return ser.Serialize(tree);
         }
     }
 }
