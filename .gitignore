@@ -1,0 +1,8 @@
+
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.cache
+*.docstates
+Thumbs.db
