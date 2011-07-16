@@ -52,7 +52,7 @@
                 try
                 {
                     var premiseTree = Parser.Parse(premiseText);
-                    var premiseExpr = Compiler.Compile(premiseTree, nameTable);
+                    var premiseExpr = Compiler.Compile(premiseTree, nameTable, StringComparer.OrdinalIgnoreCase);
                     accumulator = accumulator == null
                         ? premiseExpr
                         : new AndExpression(premiseExpr, accumulator);
