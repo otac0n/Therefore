@@ -35,7 +35,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Expressions\AndExpression.cs" />
+    <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\Expression.cs" />
+    <Compile Include="Expressions\NotExpression.cs" />
+    <Compile Include="Expressions\OrExpression.cs" />
+    <Compile Include="Expressions\ThenExpression.cs" />
+    <Compile Include="Expressions\VariableExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
