@@ -6,3 +6,4 @@
 *.cache
 *.docstates
 Thumbs.db
+*.Publish.xml
