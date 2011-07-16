@@ -13,7 +13,7 @@
             var variables = new bool?[variableCount];
             var validSolutions = new List<bool?[]>();
 
-            // Determine the number of permutations that needs to happen.
+            // Determine the number of permutations that need to happen.
             var count = 1 << variableCount;
 
             // We will use an integer to do the bit permutations.

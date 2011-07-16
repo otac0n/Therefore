@@ -160,7 +160,7 @@
                 yield break;
             }
 
-            throw new ParseException(cursor.Offset, TokenType.UnaryOperator, TokenType.Variable, TokenType.LeftParenthesis);
+            throw new ParseException(cursor.Offset, TokenType.Variable, TokenType.UnaryOperator, TokenType.LeftParenthesis);
         }
 
         private class Cursor
