@@ -39,9 +39,12 @@
         {
             Expression accumulator = null;
             var nameTable = new List<string> { "A", "B", "C", "D" };
+            var debugInfo = new Dictionary<string, object>();
+            ViewBag.DebugInfo = debugInfo;
 
             for (int i = 0; i < board.Premises.Count; i++)
             {
+                var key = "Premises[" + i + "]";
                 var premiseText = board.Premises[i];
 
                 if (string.IsNullOrWhiteSpace(premiseText))
@@ -52,14 +55,18 @@
                 try
                 {
                     var premiseTree = Parser.Parse(premiseText);
+                    debugInfo[key + " Parse Tree"] = premiseTree;
+
                     var premiseExpr = Compiler.Compile(premiseTree, nameTable, StringComparer.OrdinalIgnoreCase);
+                    debugInfo[key + " Expression Tree"] = premiseExpr;
+
                     accumulator = accumulator == null
                         ? premiseExpr
                         : new AndExpression(premiseExpr, accumulator);
                 }
                 catch (ParseException ex)
                 {
-                    ModelState.AddModelError("Premises[" + i + "]", ex.Message);
+                    ModelState.AddModelError(key, ex.Message);
                     continue;
                 }
             }
