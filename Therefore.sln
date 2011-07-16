@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Therefore.Engine", "Therefore.Engine\Therefore.Engine.csproj", "{22C8DAB3-7948-485E-B44B-F7819F50697A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22C8DAB3-7948-485E-B44B-F7819F50697A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22C8DAB3-7948-485E-B44B-F7819F50697A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22C8DAB3-7948-485E-B44B-F7819F50697A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22C8DAB3-7948-485E-B44B-F7819F50697A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
