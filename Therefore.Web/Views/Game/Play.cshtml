@@ -1,0 +1,33 @@
+﻿@model Therefore.Web.Models.GameBoard
+
+@{
+    ViewBag.Title = "Play";
+}
+
+<h2>Play</h2>
+
+@using (Html.BeginForm("Play", "Game", FormMethod.Post, new { autocomplete = "off" }))
+{
+  <table>
+    @for (int i = 0; i < Model.Premises.Count; i++)
+    {
+    <tr><td>@Html.TextBoxFor(m => m.Premises[i]) @Html.ValidationMessageFor(m => m.Premises[i])</td></tr>
+    }
+  </table>
+  <button type="submit">Check</button>
+
+  if (Model.Results == null)
+  {
+  <div class="error-text">Paradox or Syntax Error</div>
+  }
+  else
+  {
+  <dl>
+    @foreach (var result in Model.Results)
+    {
+      <dt>@result.Key</dt>
+      <dd>@(result.Value == null ? "(unknown)" : (result.Value.Value ? "Exists" : "Doesn't Exist"))</dd>
+    }
+  </dl>
+  }
+}
