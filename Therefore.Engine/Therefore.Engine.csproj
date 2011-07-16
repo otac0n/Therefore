@@ -42,6 +42,8 @@
     <Compile Include="Expressions\OrExpression.cs" />
     <Compile Include="Expressions\ThenExpression.cs" />
     <Compile Include="Expressions\VariableExpression.cs" />
+    <Compile Include="Parser\ParseException.cs" />
+    <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Parser\Span.cs" />
     <Compile Include="Parser\Token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
