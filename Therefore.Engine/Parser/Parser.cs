@@ -23,53 +23,59 @@
 
         private static Nodes.ParseTreeNode ParseAndExpression(IEnumerator<Token> tokenStream)
         {
-            var andNode = new Nodes.BinaryOperatorNode();
-
-            andNode.Left = ParseOrExpression(tokenStream);
+            var left = ParseOrExpression(tokenStream);
 
             if (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == "&")
             {
+                var andNode = new Nodes.BinaryOperatorNode();
+                andNode.Left = left;
+
                 andNode.Operator = tokenStream.Current;
                 tokenStream.MoveNext();
 
                 andNode.Right = ParseAndExpression(tokenStream);
+                return andNode;
             }
 
-            return andNode;
+            return left;
         }
 
         private static Nodes.ParseTreeNode ParseOrExpression(IEnumerator<Token> tokenStream)
         {
-            var orNode = new Nodes.BinaryOperatorNode();
-
-            orNode.Left = ParseThenExpression(tokenStream);
+            var left = ParseThenExpression(tokenStream);
 
             if (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == "|")
             {
+                var orNode = new Nodes.BinaryOperatorNode();
+                orNode.Left = left;
+
                 orNode.Operator = tokenStream.Current;
                 tokenStream.MoveNext();
 
                 orNode.Right = ParseOrExpression(tokenStream);
+                return orNode;
             }
 
-            return orNode;
+            return left;
         }
 
         private static Nodes.ParseTreeNode ParseThenExpression(IEnumerator<Token> tokenStream)
         {
-            var thenNode = new Nodes.BinaryOperatorNode();
-
-            thenNode.Left = ParseNotExpression(tokenStream);
+            var left = ParseNotExpression(tokenStream);
 
             if (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == ">")
             {
+                var thenNode = new Nodes.BinaryOperatorNode();
+                thenNode.Left = left;
+
                 thenNode.Operator = tokenStream.Current;
                 tokenStream.MoveNext();
 
                 thenNode.Right = ParseThenExpression(tokenStream);
+                return thenNode;
             }
 
-            return thenNode;
+            return left;
         }
 
         private static Nodes.ParseTreeNode ParseNotExpression(IEnumerator<Token> tokenStream)
