@@ -4,14 +4,6 @@
     using System.Collections.Generic;
     using Therefore.Engine.Expressions;
 
-    public enum NodeTypes
-    {
-        NotExpression,
-        AndExpression,
-        OrExpression,
-        ThenExpression
-    }
-
     public static class Parser
     {
         public static Nodes.ParseTreeNode Parse(string source)
