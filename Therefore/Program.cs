@@ -29,6 +29,10 @@
                 return;
             }
 
+            Console.WriteLine("Interpreted as:");
+            Console.WriteLine(expression.ToString());
+            Console.WriteLine();
+
             var values = Solver.Solve(expression, nameTable.Count);
 
             if (values == null)
