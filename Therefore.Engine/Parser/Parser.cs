@@ -6,7 +6,7 @@
 
     public static class Parser
     {
-        public static Nodes.ParseTreeNode Parse(string source)
+        public static ParseTree Parse(string source)
         {
             var tokenStream = Scanner.Scan(source).GetEnumerator();
             tokenStream.MoveNext();
@@ -18,7 +18,7 @@
                 throw ThrowHelper(tokenStream);
             }
 
-            return node;
+            return new ParseTree(node);
         }
 
         private static Nodes.ParseTreeNode ParseAndExpression(IEnumerator<Token> tokenStream)

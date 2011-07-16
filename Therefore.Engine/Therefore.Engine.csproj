@@ -35,6 +35,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler.cs" />
     <Compile Include="Expressions\AndExpression.cs" />
     <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\Expression.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Parser\Nodes\VariableNode.cs" />
     <Compile Include="Parser\ParseException.cs" />
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\ParseTree.cs" />
     <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Parser\Span.cs" />
     <Compile Include="Parser\Token.cs" />
