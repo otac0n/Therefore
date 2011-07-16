@@ -26,7 +26,7 @@
             }
         }
 
-        private static bool?[] Solve(AndExpression expression, int variableCount)
+        private static bool?[] Solve(Expression expression, int variableCount)
         {
             // Allocate space for the variables and solutions.
             var variables = new bool?[variableCount];
