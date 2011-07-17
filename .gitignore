@@ -3,7 +3,7 @@
 [Oo]bj/
 *.user
 *.suo
-*.cache
+*.[Cc]ache
 *.docstates
 Thumbs.db
 *.Publish.xml
