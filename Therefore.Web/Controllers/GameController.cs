@@ -11,6 +11,7 @@
     using Therefore.Engine;
     using System.Web.Script.Serialization;
     using Therefore.Engine.Game;
+    using Therefore.Engine.Compiler;
 
     public class GameController : Controller
     {
@@ -73,6 +74,11 @@
                         : new AndExpression(premiseExpr, accumulator);
                 }
                 catch (ParseException ex)
+                {
+                    ModelState.AddModelError(key, ex.Message);
+                    continue;
+                }
+                catch (CompileException ex)
                 {
                     ModelState.AddModelError(key, ex.Message);
                     continue;

@@ -1,4 +1,4 @@
-﻿namespace Therefore.Engine
+﻿namespace Therefore.Engine.Compiler
 {
     using System;
     using System.Collections.Generic;
@@ -39,7 +39,7 @@
                 return CompileVariableNode(varNode, nameTable);
             }
 
-            throw new NotImplementedException("Unknown node type '" + parseTreeNode.GetType().Name + "'.");
+            throw new CompileException(parseTreeNode, "Unknown node type '" + parseTreeNode.GetType().Name + "'.");
         }
 
         private static Expression CompileBinaryOperator(BinaryOperatorNode binNode, NameTable nameTable)
@@ -63,7 +63,7 @@
                     return new ThenExpression(left, right);
             }
 
-            throw new NotImplementedException("Unknown binary operator '" + binNode.Operator.Value + "'.");
+            throw new CompileException(binNode, "Unknown binary operator '" + binNode.Operator.Value + "'.");
         }
 
         private static Expression CompileUnaryOperator(UnaryOperatorNode unNode, NameTable nameTable)
@@ -76,7 +76,7 @@
                     return new NotExpression(operand);
             }
 
-            throw new NotImplementedException("Unknown unary operator '" + unNode.Operator.Value + "'.");
+            throw new CompileException(unNode, "Unknown unary operator '" + unNode.Operator.Value + "'.");
         }
 
         private static Expression CompileParenthesisNode(ParenthesisNode parenNode, NameTable nameTable)
