@@ -5,53 +5,75 @@
     using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser;
     using Therefore.Engine.Parser.Nodes;
+    using Therefore.Engine.Compiler.Constraints;
 
-    public static class Compiler
+    public sealed class Compiler
     {
-        public static Expression Compile(ParseTree parseTree, IList<string> names, IEqualityComparer<string> nameComparison = null)
+        private readonly Constraint[] constraints;
+
+        public Compiler()
         {
-            return Compile(parseTree.RootNode, new NameTable(names, nameComparison));
+            this.constraints = new[] { new ParenthesizedNotConstraint() };
         }
 
-        private static Expression Compile(ParseTreeNode parseTreeNode, NameTable nameTable)
+        private static void CheckConstraints<T>(IEnumerable<Constraint> constraints, T node, Func<Constraint, T, ConstraintViolation> constraintCheck) where T : ParseTreeNode
+        {
+            foreach (var constraint in constraints)
+            {
+                var violation = constraintCheck(constraint, node);
+                if (violation != null)
+                {
+                    throw new CompileException(violation.ViolatingNode, violation.Message);
+                }
+            }
+        }
+
+        public Expression Compile(ParseTree parseTree, IList<string> names, IEqualityComparer<string> nameComparison = null)
+        {
+            return this.Compile(parseTree.RootNode, new NameTable(names, nameComparison));
+        }
+
+        private Expression Compile(ParseTreeNode parseTreeNode, NameTable nameTable)
         {
             var binNode = parseTreeNode as BinaryOperatorNode;
             if (binNode != null)
             {
-                return CompileBinaryOperator(binNode, nameTable);
+                return this.CompileBinaryOperator(binNode, nameTable);
             }
 
             var unNode = parseTreeNode as UnaryOperatorNode;
             if (unNode != null)
             {
-                return CompileUnaryOperator(unNode, nameTable);
+                return this.CompileUnaryOperator(unNode, nameTable);
             }
 
             var parenNode = parseTreeNode as ParenthesisNode;
             if (parenNode != null)
             {
-                return CompileParenthesisNode(parenNode, nameTable);
+                return this.CompileParenthesisNode(parenNode, nameTable);
             }
 
             var varNode = parseTreeNode as VariableNode;
             if (varNode != null)
             {
-                return CompileVariableNode(varNode, nameTable);
+                return this.CompileVariableNode(varNode, nameTable);
             }
 
             throw new CompileException(parseTreeNode, "Unknown node type '" + parseTreeNode.GetType().Name + "'.");
         }
 
-        private static Expression CompileBinaryOperator(BinaryOperatorNode binNode, NameTable nameTable)
+        private Expression CompileBinaryOperator(BinaryOperatorNode binNode, NameTable nameTable)
         {
-            var left = Compile(binNode.Left, nameTable);
+            CheckConstraints(this.constraints, binNode, (c, n) => c.VisitBinaryOperatorNode(n));
+
+            var left = this.Compile(binNode.Left, nameTable);
 
             if (binNode.Right == null)
             {
                 return left;
             }
 
-            var right = Compile(binNode.Right, nameTable);
+            var right = this.Compile(binNode.Right, nameTable);
 
             switch (binNode.Operator.Value)
             {
@@ -66,9 +88,11 @@
             throw new CompileException(binNode, "Unknown binary operator '" + binNode.Operator.Value + "'.");
         }
 
-        private static Expression CompileUnaryOperator(UnaryOperatorNode unNode, NameTable nameTable)
+        private Expression CompileUnaryOperator(UnaryOperatorNode unNode, NameTable nameTable)
         {
-            var operand = Compile(unNode.Operand, nameTable);
+            CheckConstraints(this.constraints, unNode, (c, n) => c.VisitUnaryOperatorNode(n));
+
+            var operand = this.Compile(unNode.Operand, nameTable);
 
             switch (unNode.Operator.Value)
             {
@@ -79,13 +103,17 @@
             throw new CompileException(unNode, "Unknown unary operator '" + unNode.Operator.Value + "'.");
         }
 
-        private static Expression CompileParenthesisNode(ParenthesisNode parenNode, NameTable nameTable)
+        private Expression CompileParenthesisNode(ParenthesisNode parenNode, NameTable nameTable)
         {
-            return Compile(parenNode.Contained, nameTable);
+            CheckConstraints(this.constraints, parenNode, (c, n) => c.VisitParenthesisNode(n));
+
+            return this.Compile(parenNode.Contained, nameTable);
         }
 
-        private static Expression CompileVariableNode(VariableNode varNode, NameTable nameTable)
+        private Expression CompileVariableNode(VariableNode varNode, NameTable nameTable)
         {
+            CheckConstraints(this.constraints, varNode, (c, n) => c.VisitVariableNode(n));
+
             string name = varNode.Variable.Value;
             var index = nameTable.GetName(name);
             return new VariableExpression(index);

@@ -59,13 +59,8 @@
                     var premiseTree = Parser.Parse(premiseText);
                     debugInfo[key + " Parse Tree"] = ToJson(premiseTree);
 
-                    var constraintViolations = new ConstraintVisior(new ParenthesizedNotConstraint()).Visit(premiseTree).ToList();
-                    foreach (var violation in constraintViolations)
-                    {
-                        ModelState.AddModelError(key, violation.Message);
-                    }
-
-                    var premiseExpr = Compiler.Compile(premiseTree, nameTable, StringComparer.OrdinalIgnoreCase);
+                    var compiler = new Compiler();
+                    var premiseExpr = compiler.Compile(premiseTree, nameTable, StringComparer.OrdinalIgnoreCase);
                     debugInfo[key + " Expression Tree"] = premiseExpr;
 
                     accumulator = accumulator == null
