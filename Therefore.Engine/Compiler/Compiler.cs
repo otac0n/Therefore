@@ -2,18 +2,26 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Therefore.Engine.Compiler.Constraints;
     using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser;
     using Therefore.Engine.Parser.Nodes;
-    using Therefore.Engine.Compiler.Constraints;
 
     public sealed class Compiler
     {
         private readonly Constraint[] constraints;
 
-        public Compiler()
+        private static readonly CompilerOptions defaultOptions = new CompilerOptions
         {
-            this.constraints = new[] { new ParenthesizedNotConstraint() };
+            Constraints = new[] { new ParenthesizedNotConstraint() },
+        };
+
+        public Compiler(CompilerOptions options = null)
+        {
+            options = options ?? defaultOptions;
+
+            this.constraints = options.Constraints.ToArray();
         }
 
         private static void CheckConstraints<T>(IEnumerable<Constraint> constraints, T node, Func<Constraint, T, ConstraintViolation> constraintCheck) where T : ParseTreeNode

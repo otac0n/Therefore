@@ -35,8 +35,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compiler\Compiler.cs" />
     <Compile Include="Compiler\CompileException.cs" />
+    <Compile Include="Compiler\Compiler.cs" />
+    <Compile Include="Compiler\CompilerOptions.cs" />
     <Compile Include="Compiler\Constraints\Constraint.cs" />
     <Compile Include="Compiler\Constraints\ConstraintViolation.cs" />
     <Compile Include="Compiler\Constraints\ParenthesizedNotConstraint.cs" />
