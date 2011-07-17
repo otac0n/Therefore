@@ -100,6 +100,7 @@
             }
 
             var cursor = new Cursor(source);
+            cursor.Offset = Advance(new Span(source, 0, 0));
 
             foreach (var token in ScanExpression(cursor))
             {
