@@ -1,4 +1,4 @@
-﻿namespace Therefore.Engine.Game
+﻿namespace Therefore.Engine.Compiler.Constraints
 {
     using System;
     using System.Collections.Generic;

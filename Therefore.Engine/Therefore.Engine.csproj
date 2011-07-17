@@ -37,6 +37,10 @@
   <ItemGroup>
     <Compile Include="Compiler\Compiler.cs" />
     <Compile Include="Compiler\CompileException.cs" />
+    <Compile Include="Compiler\Constraints\Constraint.cs" />
+    <Compile Include="Compiler\Constraints\ConstraintViolation.cs" />
+    <Compile Include="Compiler\Constraints\ConstraintVisior.cs" />
+    <Compile Include="Compiler\Constraints\ParenthesizedNotConstraint.cs" />
     <Compile Include="Expressions\AndExpression.cs" />
     <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\Expression.cs" />
@@ -44,10 +48,6 @@
     <Compile Include="Expressions\OrExpression.cs" />
     <Compile Include="Expressions\ThenExpression.cs" />
     <Compile Include="Expressions\VariableExpression.cs" />
-    <Compile Include="Game\Constraint.cs" />
-    <Compile Include="Game\ConstraintViolation.cs" />
-    <Compile Include="Game\ConstraintVisior.cs" />
-    <Compile Include="Game\ParenthesizedNotConstraint.cs" />
     <Compile Include="Parser\Nodes\BinaryOperatorNode.cs" />
     <Compile Include="Parser\Nodes\ParenthesisNode.cs" />
     <Compile Include="Parser\Nodes\ParseTreeNode.cs" />

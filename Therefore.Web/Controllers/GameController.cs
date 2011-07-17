@@ -10,7 +10,6 @@
     using Therefore.Engine.Parser;
     using Therefore.Engine;
     using System.Web.Script.Serialization;
-    using Therefore.Engine.Game;
     using Therefore.Engine.Compiler;
 
     public class GameController : Controller
