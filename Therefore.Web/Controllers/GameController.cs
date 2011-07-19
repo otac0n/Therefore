@@ -67,10 +67,11 @@
                             new ParenthesizedNotConstraint(),
                             new SpecificVariablesConstraint(new[] { "A", "B", "C", "D" }, comparer),
                         },
+                        VariableNameComparer = comparer,
                     };
 
                     var compiler = new Compiler(compilerOptions);
-                    var premiseExpr = compiler.Compile(premiseTree, nameTable, comparer);
+                    var premiseExpr = compiler.Compile(premiseTree, nameTable);
                     debugInfo[key + " Expression Tree"] = premiseExpr;
 
                     accumulator = accumulator == null

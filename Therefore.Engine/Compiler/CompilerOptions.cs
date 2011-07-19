@@ -7,5 +7,7 @@
     public sealed class CompilerOptions
     {
         public IList<Constraint> Constraints { get; set; }
+
+        public IEqualityComparer<string> VariableNameComparer { get; set; }
     }
 }

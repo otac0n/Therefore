@@ -11,6 +11,7 @@
     public sealed class Compiler
     {
         private readonly Constraint[] constraints;
+        private readonly IEqualityComparer<string> comparer;
 
         private static readonly CompilerOptions defaultOptions = new CompilerOptions
         {
@@ -22,6 +23,7 @@
             options = options ?? defaultOptions;
 
             this.constraints = options.Constraints.ToArray();
+            this.comparer = options.VariableNameComparer;
         }
 
         private static void CheckConstraints<T>(IEnumerable<Constraint> constraints, T node, Func<Constraint, T, ConstraintViolation> constraintCheck) where T : ParseTreeNode
@@ -36,9 +38,9 @@
             }
         }
 
-        public Expression Compile(ParseTree parseTree, IList<string> names, IEqualityComparer<string> nameComparison = null)
+        public Expression Compile(ParseTree parseTree, IList<string> names)
         {
-            return this.Compile(parseTree.RootNode, new NameTable(names, nameComparison));
+            return this.Compile(parseTree.RootNode, new NameTable(names, this.comparer));
         }
 
         private Expression Compile(ParseTreeNode parseTreeNode, NameTable nameTable)
