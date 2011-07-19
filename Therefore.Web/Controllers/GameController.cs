@@ -2,16 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
-    using Therefore.Web.Models;
-    using Therefore.Engine.Expressions;
-    using Therefore.Engine.Parser;
-    using Therefore.Engine;
     using System.Web.Script.Serialization;
+    using Therefore.Engine;
     using Therefore.Engine.Compiler;
     using Therefore.Engine.Compiler.Constraints;
+    using Therefore.Engine.Expressions;
+    using Therefore.Engine.Parser;
+    using Therefore.Web.Models;
 
     public class GameController : Controller
     {
@@ -130,15 +128,39 @@
                 data = new { Error = ex.Message, ex.Offset };
             }
 
-            var result = Json(data);
-            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-            return result;
+            return Content(ToJson(data), "application/json");
         }
 
-        private string ToJson(ParseTree tree)
+        private string ToJson(object data)
         {
             var ser = new JavaScriptSerializer();
-            return ser.Serialize(tree);
+            ser.RegisterConverters(new[] { new TokenConverter() });
+            return ser.Serialize(data);
+        }
+
+        private class TokenConverter : JavaScriptConverter
+        {
+            public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+            {
+                var token = (Token)obj;
+                var result = new Dictionary<string, object>();
+
+                result["TokenType"] = token.TokenType.ToString();
+                result["Span"] = token.Span;
+                result["Value"] = token.Value;
+
+                return result;
+            }
+
+            public override IEnumerable<Type> SupportedTypes
+            {
+                get { return new[] { typeof(Token) }; }
+            }
         }
     }
 }
