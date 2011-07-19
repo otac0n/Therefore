@@ -11,6 +11,7 @@
     using Therefore.Engine;
     using System.Web.Script.Serialization;
     using Therefore.Engine.Compiler;
+    using Therefore.Engine.Compiler.Constraints;
 
     public class GameController : Controller
     {
@@ -59,8 +60,17 @@
                     var premiseTree = Parser.Parse(premiseText);
                     debugInfo[key + " Parse Tree"] = ToJson(premiseTree);
 
-                    var compiler = new Compiler();
-                    var premiseExpr = compiler.Compile(premiseTree, nameTable, StringComparer.OrdinalIgnoreCase);
+                    var comparer = StringComparer.OrdinalIgnoreCase;
+                    var compilerOptions = new CompilerOptions
+                    {
+                        Constraints = new Constraint[] {
+                            new ParenthesizedNotConstraint(),
+                            new SpecificVariablesConstraint(new[] { "A", "B", "C", "D" }, comparer),
+                        },
+                    };
+
+                    var compiler = new Compiler(compilerOptions);
+                    var premiseExpr = compiler.Compile(premiseTree, nameTable, comparer);
                     debugInfo[key + " Expression Tree"] = premiseExpr;
 
                     accumulator = accumulator == null
