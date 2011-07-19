@@ -18,7 +18,7 @@
                 throw ThrowHelper(tokenStream);
             }
 
-            return new ParseTree(node);
+            return new ParseTree(source, node);
         }
 
         private static Nodes.ParseTreeNode ParseAndExpression(IEnumerator<Token> tokenStream)

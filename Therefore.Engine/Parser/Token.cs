@@ -15,11 +15,19 @@
     public sealed class Token
     {
         private readonly TokenType tokenType;
+        private readonly string value;
         private readonly Span span;
 
-        public Token(TokenType tokenType, Span span)
+        public Token(TokenType tokenType, string source, Span span)
         {
             this.tokenType = tokenType;
+
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
+            this.value = source.Substring(span.Start, span.Length);
 
             if (span == null)
             {
@@ -43,7 +51,7 @@
         {
             get
             {
-                return this.Span.Source.Substring(this.Span.Start, this.Span.Length);
+                return this.value;
             }
         }
     }

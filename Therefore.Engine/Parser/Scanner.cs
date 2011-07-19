@@ -53,9 +53,8 @@
             };
         }
 
-        private static int Advance(Span span)
+        private static int Advance(string source, Span span)
         {
-            var source = span.Source;
             var offset = span.Start + span.Length;
 
             while (offset < span.Length && char.IsWhiteSpace(source, offset))
@@ -75,10 +74,10 @@
                 return null;
             }
 
-            var span = new Span(cursor.Source, cursor.Offset, length.Value);
-            cursor.Offset = Advance(span);
+            var span = new Span(cursor.Offset, length.Value);
+            cursor.Offset = Advance(cursor.Source, span);
 
-            return new Token(tokenType, span);
+            return new Token(tokenType, cursor.Source, span);
         }
 
         private static Token Expect(TokenType tokenType, Cursor cursor)
@@ -100,7 +99,7 @@
             }
 
             var cursor = new Cursor(source);
-            cursor.Offset = Advance(new Span(source, 0, 0));
+            cursor.Offset = Advance(source, new Span(0, 0));
 
             foreach (var token in ScanExpression(cursor))
             {
