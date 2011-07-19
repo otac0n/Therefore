@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="Models\GameBoard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\Therefore.Client.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -7,6 +7,13 @@
 @section intellisense
 {
     <script src="../../Scripts/jquery-1.4.4-vsdoc.js" type="text/javascript"></script>
+    <script src="../../Scripts/Therefore.Client.js" type="text/javascript"></script>
+}
+
+@section headers
+{
+    <script src="@Url.Content("~/Scripts/Therefore.Client.js")" type="text/javascript"></script>
+    <script type="text/javascript"> Therefore.rootUrl = "@Url.Content("~/")"; </script>
 }
 
 <h2>Play</h2>
