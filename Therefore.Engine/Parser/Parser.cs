@@ -23,59 +23,138 @@
 
         private static Nodes.ParseTreeNode ParseAndExpression(IEnumerator<Token> tokenStream)
         {
-            var left = ParseOrExpression(tokenStream);
+            var operands = new List<Nodes.ParseTreeNode>();
+            var operators = new List<Token>();
 
-            if (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == "&")
+            operands.Add(ParseOrExpression(tokenStream));
+
+            while (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == "&")
             {
-                var andNode = new Nodes.BinaryOperatorNode();
-                andNode.Left = left;
-
-                andNode.Operator = tokenStream.Current;
+                operators.Add(tokenStream.Current);
                 tokenStream.MoveNext();
 
-                andNode.Right = ParseAndExpression(tokenStream);
-                return andNode;
+                operands.Add(ParseOrExpression(tokenStream));
             }
 
-            return left;
+            return CombineBinaryOperators(operands, operators, OperatorAssociativity.LeftAssociative);
         }
 
         private static Nodes.ParseTreeNode ParseOrExpression(IEnumerator<Token> tokenStream)
         {
-            var left = ParseThenExpression(tokenStream);
+            var operands = new List<Nodes.ParseTreeNode>();
+            var operators = new List<Token>();
 
-            if (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == "|")
+            operands.Add(ParseThenExpression(tokenStream));
+
+            while (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == "|")
             {
-                var orNode = new Nodes.BinaryOperatorNode();
-                orNode.Left = left;
-
-                orNode.Operator = tokenStream.Current;
+                operators.Add(tokenStream.Current);
                 tokenStream.MoveNext();
 
-                orNode.Right = ParseOrExpression(tokenStream);
-                return orNode;
+                operands.Add(ParseThenExpression(tokenStream));
             }
 
-            return left;
+            return CombineBinaryOperators(operands, operators, OperatorAssociativity.LeftAssociative);
         }
 
         private static Nodes.ParseTreeNode ParseThenExpression(IEnumerator<Token> tokenStream)
         {
-            var left = ParseNotExpression(tokenStream);
+            var operands = new List<Nodes.ParseTreeNode>();
+            var operators = new List<Token>();
 
-            if (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == ">")
+            operands.Add(ParseNotExpression(tokenStream));
+
+            while (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == ">")
             {
-                var thenNode = new Nodes.BinaryOperatorNode();
-                thenNode.Left = left;
-
-                thenNode.Operator = tokenStream.Current;
+                operators.Add(tokenStream.Current);
                 tokenStream.MoveNext();
 
-                thenNode.Right = ParseThenExpression(tokenStream);
-                return thenNode;
+                operands.Add(ParseNotExpression(tokenStream));
             }
 
-            return left;
+            return CombineBinaryOperators(operands, operators, OperatorAssociativity.LeftAssociative);
+        }
+
+        private static Nodes.ParseTreeNode CombineBinaryOperators(List<Nodes.ParseTreeNode> operands, List<Token> operators, OperatorAssociativity associativity)
+        {
+            if (operators.Count + 1 != operands.Count)
+            {
+                throw new InvalidOperationException("You cannot combine binary operators if the number of operands is not equal to the number of operators plus one.");
+            }
+
+            // If there is just one operand, just return it.
+            if (operands.Count == 1)
+            {
+                return operands[0];
+            }
+
+            // If there are just two operands, all associativity rules are equivalent.
+            if (operands.Count == 2)
+            {
+                return new Nodes.BinaryOperatorNode
+                {
+                    Left = operands[0],
+                    Operator = operators[0],
+                    Right = operands[1],
+                };
+            }
+
+            // If there are more than two operands and the operator is non-associative, throw a parse error.
+            if (associativity == OperatorAssociativity.NonAssociative)
+            {
+                var violatingOp = operators[2];
+                throw new ParseException("The operator '" + violatingOp.Value + "' is non-associative and therefore may not be used in groups of 3 or more without using parentheses for clarification.", violatingOp.Span.Start);
+            }
+
+            // Otherwise, build up the tree with the proper associativity.
+            if (associativity == OperatorAssociativity.LeftAssociative)
+            {
+                Nodes.ParseTreeNode accumulator = null;
+                for (int i = 0; i < operands.Count; i++)
+                {
+                    if (accumulator == null)
+                    {
+                        accumulator = operands[i];
+                    }
+                    else
+                    {
+                        var thenNode = new Nodes.BinaryOperatorNode
+                        {
+                            Left = accumulator,
+                            Operator = operators[i - 1],
+                            Right = operands[i],
+                        };
+
+                        accumulator = thenNode;
+                    }
+                }
+
+                return accumulator;
+            }
+            else
+            {
+                Nodes.ParseTreeNode accumulator = null;
+                for (int i = operands.Count - 1; i >= 0; i--)
+                {
+                    if (accumulator == null)
+                    {
+                        accumulator = operands[i];
+                    }
+                    else
+                    {
+                        var thenNode = new Nodes.BinaryOperatorNode
+                        {
+                            Left = operands[i],
+                            Operator = operators[i],
+                            Right = accumulator
+                        };
+
+                        accumulator = thenNode;
+                    }
+                }
+
+                return accumulator;
+            }
         }
 
         private static Nodes.ParseTreeNode ParseNotExpression(IEnumerator<Token> tokenStream)

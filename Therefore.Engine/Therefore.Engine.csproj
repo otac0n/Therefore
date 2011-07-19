@@ -54,6 +54,7 @@
     <Compile Include="Parser\Nodes\ParseTreeNode.cs" />
     <Compile Include="Parser\Nodes\UnaryOperatorNode.cs" />
     <Compile Include="Parser\Nodes\VariableNode.cs" />
+    <Compile Include="Parser\OperatorAssociativity.cs" />
     <Compile Include="Parser\ParseException.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\ParseTree.cs" />
