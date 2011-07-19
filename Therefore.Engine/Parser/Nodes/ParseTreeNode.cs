@@ -4,5 +4,12 @@
 
     public class ParseTreeNode
     {
+        public string NodeType
+        {
+            get
+            {
+                return this.GetType().Name;
+            }
+        }
     }
 }
