@@ -17,7 +17,7 @@
                 var operand = unNode.Operand as UnaryOperatorNode;
                 if (operand != null && operand.Operator.Value == "~")
                 {
-                    return new ParenthesizedNotConstraintViolation(unNode);
+                    return new ConstraintViolation(unNode, "The 'not' operator may not be applied directly to the result of another 'not' operator.");
                 }
             }
 
@@ -32,15 +32,6 @@
         public override ConstraintViolation VisitVariableNode(VariableNode varNode)
         {
             return null;
-        }
-
-        public sealed class ParenthesizedNotConstraintViolation : ConstraintViolation
-        {
-            public ParenthesizedNotConstraintViolation(ParseTreeNode violatingNode)
-                : base(violatingNode, "The 'not' operator may not be applied directly to the result of another 'not' operator.")
-            {
-
-            }
         }
     }
 }

@@ -3,7 +3,7 @@
     using System;
     using Therefore.Engine.Parser.Nodes;
 
-    public abstract class ConstraintViolation
+    public class ConstraintViolation
     {
         private readonly ParseTreeNode violatingNode;
         private readonly string message;
