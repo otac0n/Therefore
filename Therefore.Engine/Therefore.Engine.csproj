@@ -41,6 +41,7 @@
     <Compile Include="Compiler\Constraints\Constraint.cs" />
     <Compile Include="Compiler\Constraints\ConstraintViolation.cs" />
     <Compile Include="Compiler\Constraints\ParenthesizedNotConstraint.cs" />
+    <Compile Include="Compiler\Constraints\SpecificVariablesConstraint.cs" />
     <Compile Include="Expressions\AndExpression.cs" />
     <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\Expression.cs" />
