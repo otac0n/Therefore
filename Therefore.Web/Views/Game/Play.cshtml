@@ -1,21 +1,44 @@
 ﻿@model Therefore.Web.Models.GameBoard
-
 @{
     ViewBag.Title = "Play";
 }
-
 @section intellisense
 {
     <script src="../../Scripts/jquery-1.4.4-vsdoc.js" type="text/javascript"></script>
     <script src="../../Scripts/Therefore.Client.js" type="text/javascript"></script>
 }
-
 @section headers
 {
     <script src="@Url.Content("~/Scripts/Therefore.Client.js")" type="text/javascript"></script>
     <script type="text/javascript"> Therefore.rootUrl = "@Url.Content("~/")"; </script>
-}
+    <script type="text/javascript">
+        $(function () {
+            $(".premise-line input").change(function () {
+                var $this = $(this);
+                Therefore.parse($this.val(), function (tree) {
+                    var contents = Therefore.renderTree(tree);
+                    $("#" + $this.attr("id") + "Rendered").empty().append(contents);
+                });
+            });
 
+            $(".premise-line input").change();
+        });
+    </script>
+    <style type="text/css">
+        .variable-node, .binary-operator-node, .unary-operator-node, .parenthesis-node
+        {
+            display: inline-block;
+            border-bottom: 1px solid black;
+            margin: 2px;
+            margin-top: 0;
+        }
+
+        .variable-node
+        {
+            border: none;
+        }
+    </style>
+}
 <h2>Play</h2>
 
 @using (Html.BeginForm("Play", "Game", FormMethod.Post, new { autocomplete = "off" }))
@@ -23,7 +46,7 @@
   <table>
     @for (int i = 0; i < Model.Premises.Count; i++)
     {
-    <tr><td>@Html.TextBoxFor(m => m.Premises[i]) @Html.ValidationMessageFor(m => m.Premises[i])</td></tr>
+    <tr><td class="premise-line">@Html.TextBoxFor(m => m.Premises[i]) @Html.ValidationMessageFor(m => m.Premises[i])</td><td class="premise-rendered" id="Premises_@(i)_Rendered"></td></tr>
     }
   </table>
   <button type="submit">Check</button>
