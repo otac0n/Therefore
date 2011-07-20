@@ -2,6 +2,7 @@
 
 var Therefore = {
     rootUrl: "/",
+    nodeElementName: "span",
     variableNodeClass: "variable-node",
     binaryOperatorNodeClass: "binary-operator-node",
     unaryNodeClass: "unary-operator-node",
@@ -18,7 +19,7 @@ Therefore.renderTree = function (parseTree) {
     var renderNode, renderVariableNode, renderBinaryOpNode, renderUnaryOpNode, renderParenNode;
 
     var createNode = function (className, args) {
-        var node = document.createElement("div");
+        var node = document.createElement(me.nodeElementName);
         node.setAttribute("class", className);
 
         for (var i = 1; i < arguments.length; i++) {
