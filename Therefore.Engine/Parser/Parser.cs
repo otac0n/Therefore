@@ -7,12 +7,19 @@
 
     public static class Parser
     {
+        private static OperatorDescriptorList binaryOperators = new OperatorDescriptorList()
+        {
+            { AndOperatorType.Instance, OperatorAssociativity.LeftAssociative, "&", "∧", "·" },
+            { OrOperatorType.Instance, OperatorAssociativity.LeftAssociative, "|", "∨", "+" },
+            { ThenOperatorType.Instance, OperatorAssociativity.LeftAssociative, ">", "->", "→", "⇒", "⊃" },
+        };
+
         public static ParseTree Parse(string source)
         {
             var tokenStream = Scanner.Scan(source).GetEnumerator();
             tokenStream.MoveNext();
 
-            var node = ParseAndExpression(tokenStream);
+            var node = ParseBinaryExpression(tokenStream, 0);
 
             if (tokenStream.Current.TokenType != TokenType.EOF)
             {
@@ -22,58 +29,29 @@
             return new ParseTree(source, node);
         }
 
-        private static Nodes.ParseTreeNode ParseAndExpression(IEnumerator<Token> tokenStream)
+        private static Nodes.ParseTreeNode ParseBinaryExpression(IEnumerator<Token> tokenStream, int binaryOperatorIndex)
         {
+            if (binaryOperatorIndex == binaryOperators.Count)
+            {
+                return ParseNotExpression(tokenStream);
+            }
+
+            var binaryOperator = binaryOperators[binaryOperatorIndex];
+
             var operands = new List<Nodes.ParseTreeNode>();
             var operators = new List<Token>();
 
-            operands.Add(ParseOrExpression(tokenStream));
+            operands.Add(ParseBinaryExpression(tokenStream, binaryOperatorIndex + 1));
 
-            while (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == "&")
+            while (tokenStream.Current.TokenType == TokenType.BinaryOperator && binaryOperator.OperatorSymbols.Contains(tokenStream.Current.Value))
             {
                 operators.Add(tokenStream.Current);
                 tokenStream.MoveNext();
 
-                operands.Add(ParseOrExpression(tokenStream));
+                operands.Add(ParseBinaryExpression(tokenStream, binaryOperatorIndex + 1));
             }
 
-            return CombineBinaryOperators(operands, operators, AndOperatorType.Instance, OperatorAssociativity.LeftAssociative);
-        }
-
-        private static Nodes.ParseTreeNode ParseOrExpression(IEnumerator<Token> tokenStream)
-        {
-            var operands = new List<Nodes.ParseTreeNode>();
-            var operators = new List<Token>();
-
-            operands.Add(ParseThenExpression(tokenStream));
-
-            while (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == "|")
-            {
-                operators.Add(tokenStream.Current);
-                tokenStream.MoveNext();
-
-                operands.Add(ParseThenExpression(tokenStream));
-            }
-
-            return CombineBinaryOperators(operands, operators, OrOperatorType.Instance, OperatorAssociativity.LeftAssociative);
-        }
-
-        private static Nodes.ParseTreeNode ParseThenExpression(IEnumerator<Token> tokenStream)
-        {
-            var operands = new List<Nodes.ParseTreeNode>();
-            var operators = new List<Token>();
-
-            operands.Add(ParseNotExpression(tokenStream));
-
-            while (tokenStream.Current.TokenType == TokenType.BinaryOperator && tokenStream.Current.Value == ">")
-            {
-                operators.Add(tokenStream.Current);
-                tokenStream.MoveNext();
-
-                operands.Add(ParseNotExpression(tokenStream));
-            }
-
-            return CombineBinaryOperators(operands, operators, ThenOperatorType.Instance, OperatorAssociativity.LeftAssociative);
+            return CombineBinaryOperators(operands, operators, binaryOperator.BinaryOperatorType, binaryOperator.Associativity);
         }
 
         private static Nodes.ParseTreeNode CombineBinaryOperators(List<Nodes.ParseTreeNode> operands, List<Token> operators, IBinaryOperatorType operatorType, OperatorAssociativity associativity)
@@ -188,7 +166,7 @@
                 parenNode.LeftParenthesis = tokenStream.Current;
                 tokenStream.MoveNext();
 
-                parenNode.Contained = ParseAndExpression(tokenStream);
+                parenNode.Contained = ParseBinaryExpression(tokenStream, 0);
 
                 if (tokenStream.Current.TokenType != TokenType.RightParenthesis)
                 {
