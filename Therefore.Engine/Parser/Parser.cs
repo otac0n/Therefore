@@ -1,6 +1,7 @@
 ﻿namespace Therefore.Engine.Parser
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser.OperatorTypes;
@@ -28,7 +29,12 @@
 
         public ParseTree Parse(string source)
         {
-            var tokenStream = Scanner.Scan(source).GetEnumerator();
+            var binarySymbols = (from op in this.binaryOperators
+                                 from sym in op.OperatorSymbols
+                                 select sym).ToArray();
+            var scanner = new Scanner(binarySymbols);
+
+            var tokenStream = scanner.Scan(source).GetEnumerator();
             tokenStream.MoveNext();
 
             var node = this.ParseBinaryExpression(tokenStream, 0);

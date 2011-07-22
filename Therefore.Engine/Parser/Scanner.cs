@@ -5,21 +5,25 @@
     using System.Text.RegularExpressions;
     using Therefore.Engine.Expressions;
 
-    public static class Scanner
+    public sealed class Scanner
     {
-        private readonly static Dictionary<TokenType, Func<string, int, int?>> terminals = new Dictionary<TokenType, Func<string, int, int?>>
+        private readonly Dictionary<TokenType, Func<string, int, int?>> terminals = new Dictionary<TokenType, Func<string, int, int?>>
         {
             { TokenType.Variable, MakeRegex(@"\w+") },
             { TokenType.LeftParenthesis, MakeLiteral('(') },
             { TokenType.RightParenthesis, MakeLiteral(')') },
             { TokenType.UnaryOperator, MakeLiteral('~') },
-            { TokenType.BinaryOperator, MakeLiteral('&', '|', '>') },
             { TokenType.EOF, (source, location) =>
                 {
                     return location == source.Length ? (int?)0 : null;
                 }
             },
         };
+
+        public Scanner(string[] binaryOperatorSymbols)
+        {
+            this.terminals.Add(TokenType.BinaryOperator, MakeLiteral(binaryOperatorSymbols));
+        }
 
         private static Func<string, int, int?> MakeLiteral(params char[] literals)
         {
@@ -30,6 +34,22 @@
                     if (offset < source.Length && source[offset] == literal)
                     {
                         return 1;
+                    }
+                }
+
+                return null;
+            };
+        }
+
+        private static Func<string, int, int?> MakeLiteral(params string[] literals)
+        {
+            return (source, offset) =>
+            {
+                foreach (var literal in literals)
+                {
+                    if (offset < source.Length && source.Length >= offset + literal.Length && source.Substring(offset, literal.Length) == literal)
+                    {
+                        return literal.Length;
                     }
                 }
 
@@ -53,7 +73,7 @@
             };
         }
 
-        private static int Advance(string source, Span span)
+        private int Advance(string source, Span span)
         {
             var offset = span.Start + span.Length;
 
@@ -65,9 +85,9 @@
             return offset;
         }
 
-        private static Token Accept(TokenType tokenType, Cursor cursor)
+        private Token Accept(TokenType tokenType, Cursor cursor)
         {
-            var terminal = terminals[tokenType];
+            var terminal = this.terminals[tokenType];
             var length = terminal(cursor.Source, cursor.Offset);
             if (length == null)
             {
@@ -75,14 +95,14 @@
             }
 
             var span = new Span(cursor.Offset, length.Value);
-            cursor.Offset = Advance(cursor.Source, span);
+            cursor.Offset = this.Advance(cursor.Source, span);
 
             return new Token(tokenType, cursor.Source, span);
         }
 
-        private static Token Expect(TokenType tokenType, Cursor cursor)
+        private Token Expect(TokenType tokenType, Cursor cursor)
         {
-            var token = Accept(tokenType, cursor);
+            var token = this.Accept(tokenType, cursor);
             if (token == null)
             {
                 throw new ParseException(cursor.Offset, tokenType);
@@ -91,7 +111,7 @@
             return token;
         }
 
-        public static IEnumerable<Token> Scan(string source)
+        public IEnumerable<Token> Scan(string source)
         {
             if (source == null)
             {
@@ -99,7 +119,7 @@
             }
 
             var cursor = new Cursor(source);
-            cursor.Offset = Advance(source, new Span(0, 0));
+            cursor.Offset = this.Advance(source, new Span(0, 0));
 
             foreach (var token in ScanExpression(cursor))
             {
@@ -109,7 +129,7 @@
             yield return Expect(TokenType.EOF, cursor);
         }
 
-        private static IEnumerable<Token> ScanExpression(Cursor cursor)
+        private IEnumerable<Token> ScanExpression(Cursor cursor)
         {
             foreach (var token in ScanAtomicExpression(cursor))
             {
@@ -117,7 +137,7 @@
             }
 
             Token binaryOp;
-            while ((binaryOp = Accept(TokenType.BinaryOperator, cursor)) != null)
+            while ((binaryOp = this.Accept(TokenType.BinaryOperator, cursor)) != null)
             {
                 yield return binaryOp;
 
@@ -128,16 +148,16 @@
             }
         }
 
-        private static IEnumerable<Token> ScanAtomicExpression(Cursor cursor)
+        private IEnumerable<Token> ScanAtomicExpression(Cursor cursor)
         {
-            var variable = Accept(TokenType.Variable, cursor);
+            var variable = this.Accept(TokenType.Variable, cursor);
             if (variable != null)
             {
                 yield return variable;
                 yield break;
             }
 
-            var unaryOp = Accept(TokenType.UnaryOperator, cursor);
+            var unaryOp = this.Accept(TokenType.UnaryOperator, cursor);
             if (unaryOp != null)
             {
                 yield return unaryOp;
@@ -148,15 +168,15 @@
                 yield break;
             }
 
-            var leftParen = Accept(TokenType.LeftParenthesis, cursor);
+            var leftParen = this.Accept(TokenType.LeftParenthesis, cursor);
             if (leftParen != null)
             {
                 yield return leftParen;
-                foreach (var token in ScanExpression(cursor))
+                foreach (var token in this.ScanExpression(cursor))
                 {
                     yield return token;
                 }
-                yield return Expect(TokenType.RightParenthesis, cursor);
+                yield return this.Expect(TokenType.RightParenthesis, cursor);
                 yield break;
             }
 
