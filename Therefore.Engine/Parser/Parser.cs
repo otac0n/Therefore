@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Therefore.Engine.Expressions;
+    using Therefore.Engine.Parser.OperatorTypes;
 
     public static class Parser
     {
@@ -36,7 +37,7 @@
                 operands.Add(ParseOrExpression(tokenStream));
             }
 
-            return CombineBinaryOperators(operands, operators, OperatorAssociativity.LeftAssociative);
+            return CombineBinaryOperators(operands, operators, AndOperatorType.Instance, OperatorAssociativity.LeftAssociative);
         }
 
         private static Nodes.ParseTreeNode ParseOrExpression(IEnumerator<Token> tokenStream)
@@ -54,7 +55,7 @@
                 operands.Add(ParseThenExpression(tokenStream));
             }
 
-            return CombineBinaryOperators(operands, operators, OperatorAssociativity.LeftAssociative);
+            return CombineBinaryOperators(operands, operators, OrOperatorType.Instance, OperatorAssociativity.LeftAssociative);
         }
 
         private static Nodes.ParseTreeNode ParseThenExpression(IEnumerator<Token> tokenStream)
@@ -72,10 +73,10 @@
                 operands.Add(ParseNotExpression(tokenStream));
             }
 
-            return CombineBinaryOperators(operands, operators, OperatorAssociativity.LeftAssociative);
+            return CombineBinaryOperators(operands, operators, ThenOperatorType.Instance, OperatorAssociativity.LeftAssociative);
         }
 
-        private static Nodes.ParseTreeNode CombineBinaryOperators(List<Nodes.ParseTreeNode> operands, List<Token> operators, OperatorAssociativity associativity)
+        private static Nodes.ParseTreeNode CombineBinaryOperators(List<Nodes.ParseTreeNode> operands, List<Token> operators, IBinaryOperatorType operatorType, OperatorAssociativity associativity)
         {
             if (operators.Count + 1 != operands.Count)
             {
@@ -95,6 +96,7 @@
                 {
                     Left = operands[0],
                     Operator = operators[0],
+                    OperatorType = operatorType,
                     Right = operands[1],
                 };
             }
@@ -102,8 +104,7 @@
             // If there are more than two operands and the operator is non-associative, throw a parse error.
             if (associativity == OperatorAssociativity.NonAssociative)
             {
-                var violatingOp = operators[2];
-                throw new ParseException("The operator '" + violatingOp.Value + "' is non-associative and therefore may not be used in groups of 3 or more without using parentheses for clarification.", violatingOp.Span.Start);
+                throw new ParseException("The operator '" + operatorType.Name + "' is non-associative and therefore may not be used in groups of 3 or more without using parentheses for clarification.", operators[2].Span.Start);
             }
 
             // Otherwise, build up the tree with the proper associativity.
@@ -122,6 +123,7 @@
                         {
                             Left = accumulator,
                             Operator = operators[i - 1],
+                            OperatorType = operatorType,
                             Right = operands[i],
                         };
 
@@ -146,6 +148,7 @@
                         {
                             Left = operands[i],
                             Operator = operators[i],
+                            OperatorType = operatorType,
                             Right = accumulator
                         };
 

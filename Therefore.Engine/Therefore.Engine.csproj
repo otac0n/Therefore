@@ -55,6 +55,10 @@
     <Compile Include="Parser\Nodes\UnaryOperatorNode.cs" />
     <Compile Include="Parser\Nodes\VariableNode.cs" />
     <Compile Include="Parser\OperatorAssociativity.cs" />
+    <Compile Include="Parser\OperatorTypes\AndOperatorType.cs" />
+    <Compile Include="Parser\OperatorTypes\ThenOperatorType.cs" />
+    <Compile Include="Parser\OperatorTypes\OrOperatorType.cs" />
+    <Compile Include="Parser\OperatorTypes\IBinaryOperatorType.cs" />
     <Compile Include="Parser\ParseException.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\ParseTree.cs" />

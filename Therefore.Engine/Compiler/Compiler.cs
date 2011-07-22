@@ -85,17 +85,7 @@
 
             var right = this.Compile(binNode.Right, nameTable);
 
-            switch (binNode.Operator.Value)
-            {
-                case "&":
-                    return new AndExpression(left, right);
-                case "|":
-                    return new OrExpression(left, right);
-                case ">":
-                    return new ThenExpression(left, right);
-            }
-
-            throw new CompileException(binNode, "Unknown binary operator '" + binNode.Operator.Value + "'.");
+            return binNode.OperatorType.Create(left, right);
         }
 
         private Expression CompileUnaryOperator(UnaryOperatorNode unNode, NameTable nameTable)
