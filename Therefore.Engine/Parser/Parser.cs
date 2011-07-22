@@ -5,21 +5,33 @@
     using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser.OperatorTypes;
 
-    public static class Parser
+    public sealed class Parser
     {
-        private static OperatorDescriptorList binaryOperators = new OperatorDescriptorList()
-        {
-            { AndOperatorType.Instance, OperatorAssociativity.LeftAssociative, "&", "∧", "·" },
-            { OrOperatorType.Instance, OperatorAssociativity.LeftAssociative, "|", "∨", "+" },
-            { ThenOperatorType.Instance, OperatorAssociativity.LeftAssociative, ">", "->", "→", "⇒", "⊃" },
-        };
+        private readonly OperatorDescriptorList binaryOperators;
 
-        public static ParseTree Parse(string source)
+        public Parser(ParserOptions options = null)
+        {
+            if (options == null || options.OperatorDescriptors == null)
+            {
+                this.binaryOperators = new OperatorDescriptorList()
+                {
+                    { AndOperatorType.Instance, OperatorAssociativity.LeftAssociative, "&", "∧", "·" },
+                    { OrOperatorType.Instance, OperatorAssociativity.LeftAssociative, "|", "∨", "+" },
+                    { ThenOperatorType.Instance, OperatorAssociativity.LeftAssociative, ">", "->", "→", "⇒", "⊃" },
+                };
+            }
+            else
+            {
+                this.binaryOperators = options.OperatorDescriptors;
+            }
+        }
+
+        public ParseTree Parse(string source)
         {
             var tokenStream = Scanner.Scan(source).GetEnumerator();
             tokenStream.MoveNext();
 
-            var node = ParseBinaryExpression(tokenStream, 0);
+            var node = this.ParseBinaryExpression(tokenStream, 0);
 
             if (tokenStream.Current.TokenType != TokenType.EOF)
             {
@@ -29,26 +41,26 @@
             return new ParseTree(source, node);
         }
 
-        private static Nodes.ParseTreeNode ParseBinaryExpression(IEnumerator<Token> tokenStream, int binaryOperatorIndex)
+        private Nodes.ParseTreeNode ParseBinaryExpression(IEnumerator<Token> tokenStream, int binaryOperatorIndex)
         {
-            if (binaryOperatorIndex == binaryOperators.Count)
+            if (binaryOperatorIndex == this.binaryOperators.Count)
             {
-                return ParseNotExpression(tokenStream);
+                return this.ParseNotExpression(tokenStream);
             }
 
-            var binaryOperator = binaryOperators[binaryOperatorIndex];
+            var binaryOperator = this.binaryOperators[binaryOperatorIndex];
 
             var operands = new List<Nodes.ParseTreeNode>();
             var operators = new List<Token>();
 
-            operands.Add(ParseBinaryExpression(tokenStream, binaryOperatorIndex + 1));
+            operands.Add(this.ParseBinaryExpression(tokenStream, binaryOperatorIndex + 1));
 
             while (tokenStream.Current.TokenType == TokenType.BinaryOperator && binaryOperator.OperatorSymbols.Contains(tokenStream.Current.Value))
             {
                 operators.Add(tokenStream.Current);
                 tokenStream.MoveNext();
 
-                operands.Add(ParseBinaryExpression(tokenStream, binaryOperatorIndex + 1));
+                operands.Add(this.ParseBinaryExpression(tokenStream, binaryOperatorIndex + 1));
             }
 
             return CombineBinaryOperators(operands, operators, binaryOperator.BinaryOperatorType, binaryOperator.Associativity);
@@ -138,7 +150,7 @@
             }
         }
 
-        private static Nodes.ParseTreeNode ParseNotExpression(IEnumerator<Token> tokenStream)
+        private Nodes.ParseTreeNode ParseNotExpression(IEnumerator<Token> tokenStream)
         {
             if (tokenStream.Current.TokenType == TokenType.UnaryOperator && tokenStream.Current.Value == "~")
             {
@@ -147,17 +159,17 @@
                 notNode.Operator = tokenStream.Current;
                 tokenStream.MoveNext();
 
-                notNode.Operand = ParseNotExpression(tokenStream);
+                notNode.Operand = this.ParseNotExpression(tokenStream);
 
                 return notNode;
             }
             else
             {
-                return ParseParenExpression(tokenStream);
+                return this.ParseParenExpression(tokenStream);
             }
         }
 
-        private static Nodes.ParseTreeNode ParseParenExpression(IEnumerator<Token> tokenStream)
+        private Nodes.ParseTreeNode ParseParenExpression(IEnumerator<Token> tokenStream)
         {
             if (tokenStream.Current.TokenType == TokenType.LeftParenthesis)
             {
@@ -180,11 +192,11 @@
             }
             else
             {
-                return ParseVariable(tokenStream);
+                return this.ParseVariable(tokenStream);
             }
         }
 
-        private static Nodes.ParseTreeNode ParseVariable(IEnumerator<Token> tokenStream)
+        private Nodes.ParseTreeNode ParseVariable(IEnumerator<Token> tokenStream)
         {
             if (tokenStream.Current.TokenType == TokenType.Variable)
             {

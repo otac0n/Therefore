@@ -55,7 +55,8 @@
 
                 try
                 {
-                    var premiseTree = Parser.Parse(premiseText);
+                    var parser = new Parser();
+                    var premiseTree = parser.Parse(premiseText);
                     debugInfo[key + " Parse Tree"] = ToJson(premiseTree);
 
                     var comparer = StringComparer.OrdinalIgnoreCase;
@@ -121,7 +122,8 @@
             object data;
             try
             {
-                data = Parser.Parse(statement);
+                var parser = new Parser();
+                data = parser.Parse(statement);
             }
             catch (ParseException ex)
             {

@@ -63,6 +63,7 @@
     <Compile Include="Parser\OperatorTypes\IBinaryOperatorType.cs" />
     <Compile Include="Parser\ParseException.cs" />
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\ParserOptions.cs" />
     <Compile Include="Parser\ParseTree.cs" />
     <Compile Include="Parser\Scanner.cs" />
     <Compile Include="Parser\Span.cs" />
