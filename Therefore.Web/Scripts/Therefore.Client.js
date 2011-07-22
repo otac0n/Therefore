@@ -6,7 +6,12 @@ var Therefore = {
     variableNodeClass: "variable-node",
     binaryOperatorNodeClass: "binary-operator-node",
     unaryNodeClass: "unary-operator-node",
-    parenthesisNodeClass: "parenthesis-node"
+    parenthesisNodeClass: "parenthesis-node",
+    operatorSymbols: {
+        "and": "•",
+        "or": "∨",
+        "then": "⇒"
+    }
 };
 
 Therefore.parse = function (statement, callback) {
@@ -57,7 +62,7 @@ Therefore.renderTree = function (parseTree) {
     renderBinaryOpNode = function (node) {
         return createNode(me.binaryOperatorNodeClass,
             renderNode(node.Left),
-            node.Operator.Value,
+            me.operatorSymbols[node.OperatorType.Name] || node.Operator.Value,
             renderNode(node.Right));
     };
 
