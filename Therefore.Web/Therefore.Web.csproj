@@ -111,6 +111,10 @@
       <Project>{22C8DAB3-7948-485E-B44B-F7819F50697A}</Project>
       <Name>Therefore.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Therefore.Game\Therefore.Game.csproj">
+      <Project>{90E365D5-C1DD-47B0-AC03-00DFF6DACED9}</Project>
+      <Name>Therefore.Game</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Game\Index.cshtml" />
