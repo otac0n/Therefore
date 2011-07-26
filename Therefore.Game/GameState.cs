@@ -19,6 +19,7 @@
         private readonly int dealer;
         private readonly int turn;
         private readonly Premise[] proof;
+        private readonly bool isRoundOver;
 
         public GameState(IList<string> playerIds)
         {
@@ -34,6 +35,7 @@
             this.turn = turn;
             this.proof = (from i in Enumerable.Range(0, 4)
                           select new Premise(new List<PlacementCard>())).ToArray();
+            this.isRoundOver = false;
         }
 
         private GameState(
@@ -42,7 +44,8 @@
             ReadOnlyDictionary<string, ReadOnlyCollection<Card>> hands,
             int dealer,
             int turn,
-            Premise[] proof)
+            Premise[] proof,
+            bool isRoundOver)
         {
             this.playerIds = playerIds;
             this.deck = deck;
@@ -50,6 +53,7 @@
             this.dealer = dealer;
             this.turn = turn;
             this.proof = proof;
+            this.isRoundOver = isRoundOver;
         }
 
         public string CurrentPlayerId
@@ -101,6 +105,14 @@
             }
         }
 
+        public bool IsRoundOver
+        {
+            get
+            {
+                return this.isRoundOver;
+            }
+        }
+
         private static Compiler GetCompiler()
         {
             if (compiler == null)
@@ -134,7 +146,8 @@
                 hands.ToDictionary(h => h.Key, h => h.Value.AsReadOnly()).AsReadOnly(),
                 turn,
                 turn,
-                new Premise[this.proof.Length]);
+                new Premise[this.proof.Length],
+                false);
         }
 
         private static int GetNextPlayer(int currentPlayer, int playerCount)
@@ -204,9 +217,15 @@
             var hands = this.hands.ToDictionary(h => h.Key, h => h.Value.ToList());
 
             var hand = hands[playerId];
-            while (hand.Count < 7)
+            while (hand.Count < 7 && deck.Count > 0)
             {
                 hand.Add(deck.Pop());
+            }
+
+            var isRoundOver = this.isRoundOver;
+            if (hand.Count < 7)
+            {
+                isRoundOver = true;
             }
 
             return new GameState(
@@ -215,7 +234,8 @@
                 hands.ToDictionary(h => h.Key, h => h.Value.AsReadOnly()).AsReadOnly(),
                 this.dealer,
                 this.turn,
-                this.proof);
+                this.proof,
+                isRoundOver);
         }
 
         public GameState AdvanceTurn()
@@ -228,7 +248,8 @@
                 this.hands,
                 this.dealer,
                 turn,
-                this.proof);
+                this.proof,
+                this.isRoundOver);
         }
 
         public GameState PlaceCardAt(PlacementCard card, int premise, int index)
@@ -244,7 +265,8 @@
                 this.hands,
                 this.dealer,
                 this.turn,
-                proof.Select(p => p.AsReadOnly()).ToArray());
+                proof.Select(p => p.AsReadOnly()).ToArray(),
+                this.isRoundOver);
         }
 
         public GameState Discard(string playerId, Card card)
@@ -259,7 +281,8 @@
                 hands.ToDictionary(h => h.Key, h => h.Value.AsReadOnly()).AsReadOnly(),
                 this.dealer,
                 this.turn,
-                this.proof);
+                this.proof,
+                this.isRoundOver);
         }
 
         public GameState RemoveCardAt(int premise, int index)
@@ -275,7 +298,8 @@
                 this.hands,
                 this.dealer,
                 this.turn,
-                proof.Select(p => p.AsReadOnly()).ToArray());
+                proof.Select(p => p.AsReadOnly()).ToArray(),
+                this.isRoundOver);
         }
     }
 }
