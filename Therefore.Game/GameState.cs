@@ -167,11 +167,14 @@
                 cards.Add(new PlacementCard("B"));
                 cards.Add(new PlacementCard("C"));
                 cards.Add(new PlacementCard("D"));
+
                 cards.Add(new PlacementCard("·"));
                 cards.Add(new PlacementCard("∨"));
                 cards.Add(new PlacementCard("⇒"));
                 cards.Add(new PlacementCard("~"));
                 cards.Add(new PlacementCard("~"));
+
+                cards.Add(new ExsculpoCard());
             }
 
             for (int i = 0; i < 6; i++)
@@ -257,6 +260,22 @@
                 this.dealer,
                 this.turn,
                 this.proof);
+        }
+
+        public GameState RemoveCardAt(int premise, int index)
+        {
+            var proof = (from p in this.proof
+                         select p.ToList()).ToArray();
+
+            proof[premise].RemoveAt(index);
+
+            return new GameState(
+                this.playerIds,
+                this.deck,
+                this.hands,
+                this.dealer,
+                this.turn,
+                proof.Select(p => p.AsReadOnly()).ToArray());
         }
     }
 }
