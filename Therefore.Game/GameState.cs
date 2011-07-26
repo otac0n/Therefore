@@ -136,6 +136,11 @@
 
         public GameState StartNewRound()
         {
+            if (!this.isRoundOver)
+            {
+                throw new InvalidOperationException("The round is not over.");
+            }
+
             var deck = ShuffleNewDeck();
             var hands = DealCards(deck, this.playerIds);
             var turn = GetNextPlayer(this.dealer, this.playerIds.Count);
@@ -213,6 +218,11 @@
 
         public GameState DrawCards(string playerId)
         {
+            if (this.isRoundOver)
+            {
+                throw new InvalidOperationException("The round is over.");
+            }
+
             var deck = new Stack<Card>(this.deck);
             var hands = this.hands.ToDictionary(h => h.Key, h => h.Value.ToList());
 
@@ -254,6 +264,11 @@
 
         public GameState PlaceCardAt(PlacementCard card, int premise, int index)
         {
+            if (this.isRoundOver)
+            {
+                throw new InvalidOperationException("The round is over.");
+            }
+
             var proof = (from p in this.proof
                          select p.ToList()).ToArray();
 
@@ -287,6 +302,11 @@
 
         public GameState RemoveCardAt(int premise, int index)
         {
+            if (this.isRoundOver)
+            {
+                throw new InvalidOperationException("The round is over.");
+            }
+
             var proof = (from p in this.proof
                          select p.ToList()).ToArray();
 
