@@ -174,6 +174,14 @@
                 cards.Add(new PlacementCard("~"));
             }
 
+            for (int i = 0; i < 6; i++)
+            {
+                cards.Add(new OptionCard("(", ")"));
+            }
+
+            cards.Add(new OptionCard("A", "B", "C", "D"));
+            cards.Add(new OptionCard("·", "∨", "⇒", "~"));
+
             var deck = new Stack<Card>();
             var rand = new Random();
             var count = cards.Count;
