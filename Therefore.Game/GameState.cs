@@ -10,9 +10,6 @@
 
     public sealed class GameState
     {
-        private static Parser parser;
-        private static Compiler compiler;
-
         private readonly Game game;
 
         private readonly ReadOnlyCollection<string> playerIds;
@@ -97,8 +94,8 @@
         {
             get
             {
-                var parser = GetParser();
-                var compiler = GetCompiler();
+                var parser = this.game.Parser;
+                var compiler = this.game.Compiler;
 
                 foreach (var premise in this.proof)
                 {
@@ -132,27 +129,6 @@
             {
                 return this.isRoundOver;
             }
-        }
-
-        private static Compiler GetCompiler()
-        {
-            if (compiler == null)
-            {
-                compiler = new Compiler();
-            }
-
-            return compiler;
-
-        }
-
-        private static Parser GetParser()
-        {
-            if (parser == null)
-            {
-                parser = new Parser();
-            }
-
-            return parser;
         }
 
         public GameState StartNewRound()

@@ -3,9 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using Therefore.Engine.Compiler;
+    using Therefore.Engine.Parser;
 
     public class Game
     {
+        private Parser parser;
+        private Compiler compiler;
+
         private GameState gameState;
 
         public Game(IList<string> playerIds)
@@ -30,6 +35,33 @@
                 return this.gameState.Hands;
             }
         }
+
+        internal Compiler Compiler
+        {
+            get
+            {
+                if (compiler == null)
+                {
+                    compiler = new Compiler();
+                }
+
+                return compiler;
+            }
+        }
+
+        internal Parser Parser
+        {
+            get
+            {
+                if (parser == null)
+                {
+                    parser = new Parser();
+                }
+
+                return parser;
+            }
+        }
+
 
         public void StartNewRound()
         {
