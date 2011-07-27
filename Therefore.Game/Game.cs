@@ -15,7 +15,7 @@
                 throw new ArgumentNullException("playerIds");
             }
 
-            this.gameState = new GameState(playerIds);
+            this.gameState = new GameState(this, playerIds);
         }
 
         public string CurrentPlayer

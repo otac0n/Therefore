@@ -13,6 +13,8 @@
         private static Parser parser;
         private static Compiler compiler;
 
+        private readonly Game game;
+
         private readonly ReadOnlyCollection<string> playerIds;
         private readonly ReadOnlyCollection<Card> deck;
         private readonly ReadOnlyDictionary<string, int> scores;
@@ -22,8 +24,15 @@
         private readonly Premise[] proof;
         private readonly bool isRoundOver;
 
-        public GameState(IList<string> playerIds)
+        public GameState(Game game, IList<string> playerIds)
         {
+            if (game == null)
+            {
+                throw new ArgumentNullException("game");
+            }
+
+            this.game = game;
+
             this.playerIds = playerIds.ToList().AsReadOnly();
 
             var deck = ShuffleNewDeck();
@@ -41,6 +50,7 @@
         }
 
         private GameState(
+            Game game,
             ReadOnlyCollection<string> playerIds,
             ReadOnlyCollection<Card> deck,
             ReadOnlyDictionary<string, int> scores,
@@ -50,6 +60,13 @@
             Premise[] proof,
             bool isRoundOver)
         {
+            if (game == null)
+            {
+                throw new ArgumentNullException("game");
+            }
+
+            this.game = game;
+
             this.playerIds = playerIds;
             this.deck = deck;
             this.scores = scores;
@@ -150,6 +167,7 @@
             var turn = GetNextPlayer(this.dealer, this.playerIds.Count);
 
             return new GameState(
+                this.game,
                 this.playerIds,
                 deck.ToList().AsReadOnly(),
                 this.scores,
@@ -244,6 +262,7 @@
             }
 
             return new GameState(
+                this.game,
                 this.playerIds,
                 deck.ToList().AsReadOnly(),
                 this.scores,
@@ -259,6 +278,7 @@
             var turn = GetNextPlayer(this.turn, this.playerIds.Count);
 
             return new GameState(
+                this.game,
                 this.playerIds,
                 this.deck,
                 this.scores,
@@ -282,6 +302,7 @@
             proof[premise].Insert(index, card);
 
             return new GameState(
+                this.game,
                 this.playerIds,
                 this.deck,
                 this.scores,
@@ -299,6 +320,7 @@
             hand.Remove(card);
 
             return new GameState(
+                this.game,
                 this.playerIds,
                 this.deck,
                 this.scores,
@@ -322,6 +344,7 @@
             proof[premise].RemoveAt(index);
 
             return new GameState(
+                this.game,
                 this.playerIds,
                 this.deck,
                 this.scores,
@@ -345,6 +368,7 @@
             }
 
             return new GameState(
+                this.game,
                 this.playerIds,
                 this.deck,
                 this.scores,
