@@ -92,6 +92,14 @@
             }
         }
 
+        public ReadOnlyCollection<Premise> Proof
+        {
+            get
+            {
+                return this.proof.ToList().AsReadOnly();
+            }
+        }
+
         public bool IsValid
         {
             get
