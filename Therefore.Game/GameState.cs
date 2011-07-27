@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using Therefore.Engine;
     using Therefore.Engine.Compiler;
+    using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser;
     using Premise = System.Collections.ObjectModel.ReadOnlyCollection<PlacementCard>;
 
@@ -94,33 +96,42 @@
         {
             get
             {
-                var parser = this.game.Parser;
-                var compiler = this.game.Compiler;
+                Expression ignore;
+                return TryCompile(out ignore);
+            }
+        }
 
-                foreach (var premise in this.proof)
+        private bool TryCompile(out Expression expression)
+        {
+            expression = null;
+
+            var parser = this.game.Parser;
+            var compiler = this.game.Compiler;
+            var nameTable = new List<string> { "A", "B", "C", "D" };
+
+            foreach (var premise in this.proof)
+            {
+                if (premise.Count == 0)
                 {
-                    if (premise.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        var parseTree = parser.Parse(string.Join(string.Empty, from c in premise select c.Symbol));
-                        compiler.Compile(parseTree, new List<string>());
-                    }
-                    catch (ParseException)
-                    {
-                        return false;
-                    }
-                    catch (CompileException)
-                    {
-                        return false;
-                    }
+                    continue;
                 }
 
-                return true;
+                try
+                {
+                    var parseTree = parser.Parse(string.Join(string.Empty, from c in premise select c.Symbol));
+                    compiler.Compile(parseTree, nameTable);
+                }
+                catch (ParseException)
+                {
+                    return false;
+                }
+                catch (CompileException)
+                {
+                    return false;
+                }
             }
+
+            return true;
         }
 
         public bool IsRoundOver
@@ -129,6 +140,28 @@
             {
                 return this.isRoundOver;
             }
+        }
+
+        /// <summary>
+        /// Finds players who correspond to variables that follow logically from this game state's premises.
+        /// </summary>
+        /// <returns>The list of existing players.</returns>
+        public List<string> FindExistingPlayers()
+        {
+            Expression proof;
+            this.TryCompile(out proof);
+            var solution = Solver.Solve(proof, 4);
+
+            var existing = new List<string>();
+            for (int i = 0; i < this.playerIds.Count; i++)
+            {
+                if (solution[i] == true)
+                {
+                    existing.Add(this.playerIds[i]);
+                }
+            }
+
+            return existing;
         }
 
         public GameState StartNewRound()
