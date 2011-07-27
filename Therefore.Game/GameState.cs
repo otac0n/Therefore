@@ -321,5 +321,27 @@
                 proof.Select(p => p.AsReadOnly()).ToArray(),
                 this.isRoundOver);
         }
+
+        public GameState EndRound()
+        {
+            if (this.isRoundOver)
+            {
+                throw new InvalidOperationException("The round is already over.");
+            }
+
+            if (!this.IsValid)
+            {
+                throw new InvalidOperationException("The round cannot end because the current game state is invalid.");
+            }
+
+            return new GameState(
+                this.playerIds,
+                this.deck,
+                this.hands,
+                this.dealer,
+                this.turn,
+                this.proof,
+                true);
+        }
     }
 }

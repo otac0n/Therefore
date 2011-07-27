@@ -43,6 +43,8 @@
     <Compile Include="Card.cs" />
     <Compile Include="CardAction.cs" />
     <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="EndRoundCardAction.cs" />
+    <Compile Include="ErgoCard.cs" />
     <Compile Include="ExsculpoCard.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameState.cs" />
