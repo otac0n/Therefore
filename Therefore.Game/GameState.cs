@@ -15,6 +15,7 @@
 
         private readonly ReadOnlyCollection<string> playerIds;
         private readonly ReadOnlyCollection<Card> deck;
+        private readonly ReadOnlyDictionary<string, int> scores;
         private readonly ReadOnlyDictionary<string, ReadOnlyCollection<Card>> hands;
         private readonly int dealer;
         private readonly int turn;
@@ -30,6 +31,7 @@
             var turn = GetNextPlayer(this.dealer, this.playerIds.Count);
 
             this.deck = deck.ToList().AsReadOnly();
+            this.scores = playerIds.ToDictionary(p => p, p => 0).AsReadOnly();
             this.hands = hands.ToDictionary(h => h.Key, h => h.Value.AsReadOnly()).AsReadOnly();
             this.dealer = turn;
             this.turn = turn;
@@ -41,6 +43,7 @@
         private GameState(
             ReadOnlyCollection<string> playerIds,
             ReadOnlyCollection<Card> deck,
+            ReadOnlyDictionary<string, int> scores,
             ReadOnlyDictionary<string, ReadOnlyCollection<Card>> hands,
             int dealer,
             int turn,
@@ -49,6 +52,7 @@
         {
             this.playerIds = playerIds;
             this.deck = deck;
+            this.scores = scores;
             this.hands = hands;
             this.dealer = dealer;
             this.turn = turn;
@@ -148,6 +152,7 @@
             return new GameState(
                 this.playerIds,
                 deck.ToList().AsReadOnly(),
+                this.scores,
                 hands.ToDictionary(h => h.Key, h => h.Value.AsReadOnly()).AsReadOnly(),
                 turn,
                 turn,
@@ -241,6 +246,7 @@
             return new GameState(
                 this.playerIds,
                 deck.ToList().AsReadOnly(),
+                this.scores,
                 hands.ToDictionary(h => h.Key, h => h.Value.AsReadOnly()).AsReadOnly(),
                 this.dealer,
                 this.turn,
@@ -255,6 +261,7 @@
             return new GameState(
                 this.playerIds,
                 this.deck,
+                this.scores,
                 this.hands,
                 this.dealer,
                 turn,
@@ -277,6 +284,7 @@
             return new GameState(
                 this.playerIds,
                 this.deck,
+                this.scores,
                 this.hands,
                 this.dealer,
                 this.turn,
@@ -293,6 +301,7 @@
             return new GameState(
                 this.playerIds,
                 this.deck,
+                this.scores,
                 hands.ToDictionary(h => h.Key, h => h.Value.AsReadOnly()).AsReadOnly(),
                 this.dealer,
                 this.turn,
@@ -315,6 +324,7 @@
             return new GameState(
                 this.playerIds,
                 this.deck,
+                this.scores,
                 this.hands,
                 this.dealer,
                 this.turn,
@@ -337,6 +347,7 @@
             return new GameState(
                 this.playerIds,
                 this.deck,
+                this.scores,
                 this.hands,
                 this.dealer,
                 this.turn,
