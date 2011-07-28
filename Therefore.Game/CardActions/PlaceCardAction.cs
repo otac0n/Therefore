@@ -1,14 +1,15 @@
-﻿namespace Therefore.Game
+﻿namespace Therefore.Game.CardActions
 {
     using System;
+    using Therefore.Game.Cards;
 
-    public class RemoveCardAction : CardAction
+    public class PlaceCardAction : CardAction
     {
         private readonly int premise;
         private readonly int index;
-        private readonly ExsculpoCard card;
+        private readonly PlacementCard card;
 
-        public RemoveCardAction(ExsculpoCard card, int premise, int index)
+        public PlaceCardAction(PlacementCard card, int premise, int index)
             : base(card)
         {
             this.card = card;
@@ -28,7 +29,7 @@
             this.index = index;
         }
 
-        public new ExsculpoCard Card
+        public new PlacementCard Card
         {
             get
             {
@@ -38,7 +39,7 @@
 
         public override GameState ApplyTo(GameState currentState, string playerId)
         {
-            return currentState.RemoveCardAt(this.premise, this.index).Discard(playerId, this.Card);
+            return currentState.PlaceCardAt(this.card, this.premise, this.index).Discard(playerId, this.Card);
         }
     }
 }

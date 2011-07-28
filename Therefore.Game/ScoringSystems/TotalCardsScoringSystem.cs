@@ -1,14 +1,14 @@
-﻿namespace Therefore.Game
+﻿namespace Therefore.Game.ScoringSystems
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    public class AverageCardsScoringSystem : ScoringSystem
+    public class TotalCardsScoringSystem : ScoringSystem
     {
         public override Dictionary<string, int> Score(GameState gameState)
         {
             var scoringPlayers = gameState.FindExistingPlayers();
-            var points = gameState.Proof.Sum(p => p.Count) / scoringPlayers.Count;
+            var points = gameState.Proof.Sum(p => p.Count);
 
             return scoringPlayers.ToDictionary(s => s, s => points);
         }

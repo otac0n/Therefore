@@ -40,25 +40,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AverageCardsScoringSystem.cs" />
-    <Compile Include="Card.cs" />
-    <Compile Include="CardAction.cs" />
-    <Compile Include="ConstantScoringSystem.cs" />
+    <Compile Include="ScoringSystems\AverageCardsScoringSystem.cs" />
+    <Compile Include="Cards\Card.cs" />
+    <Compile Include="CardActions\CardAction.cs" />
+    <Compile Include="ScoringSystems\ConstantScoringSystem.cs" />
     <Compile Include="DictionaryExtensions.cs" />
-    <Compile Include="EndRoundCardAction.cs" />
-    <Compile Include="ErgoCard.cs" />
-    <Compile Include="ExsculpoCard.cs" />
+    <Compile Include="CardActions\EndRoundCardAction.cs" />
+    <Compile Include="Cards\ErgoCard.cs" />
+    <Compile Include="Cards\ExsculpoCard.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameState.cs" />
-    <Compile Include="OptionCard.cs" />
-    <Compile Include="PlaceOptionCardAction.cs" />
-    <Compile Include="PlaceCardAction.cs" />
-    <Compile Include="PlacementCard.cs" />
+    <Compile Include="Cards\OptionCard.cs" />
+    <Compile Include="CardActions\PlaceOptionCardAction.cs" />
+    <Compile Include="CardActions\PlaceCardAction.cs" />
+    <Compile Include="Cards\PlacementCard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadOnlyDictionary`2.cs" />
-    <Compile Include="RemoveCardAction.cs" />
-    <Compile Include="ScoringSystem.cs" />
-    <Compile Include="TotalCardsScoringSystem.cs" />
+    <Compile Include="CardActions\RemoveCardAction.cs" />
+    <Compile Include="ScoringSystems\ScoringSystem.cs" />
+    <Compile Include="ScoringSystems\TotalCardsScoringSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Therefore.Engine\Therefore.Engine.csproj">

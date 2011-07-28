@@ -1,4 +1,4 @@
-﻿namespace Therefore.Game
+﻿namespace Therefore.Game.Cards
 {
     using System;
     using System.Collections.Generic;

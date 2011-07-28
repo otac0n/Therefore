@@ -1,4 +1,4 @@
-﻿namespace Therefore.Game
+﻿namespace Therefore.Game.ScoringSystems
 {
     using System;
     using System.Collections.Generic;

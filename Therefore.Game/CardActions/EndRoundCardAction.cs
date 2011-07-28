@@ -1,5 +1,7 @@
-﻿namespace Therefore.Game
+﻿namespace Therefore.Game.CardActions
 {
+    using Therefore.Game.Cards;
+
     public class EndRoundCardAction : CardAction
     {
         public EndRoundCardAction(ErgoCard card)

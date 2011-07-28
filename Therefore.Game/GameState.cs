@@ -8,7 +8,8 @@
     using Therefore.Engine.Compiler;
     using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser;
-    using Premise = System.Collections.ObjectModel.ReadOnlyCollection<PlacementCard>;
+    using Therefore.Game.Cards;
+    using Premise = System.Collections.ObjectModel.ReadOnlyCollection<Therefore.Game.Cards.PlacementCard>;
 
     public sealed class GameState
     {

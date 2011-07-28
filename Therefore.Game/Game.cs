@@ -5,6 +5,8 @@
     using System.Collections.ObjectModel;
     using Therefore.Engine.Compiler;
     using Therefore.Engine.Parser;
+    using Therefore.Game.CardActions;
+    using Therefore.Game.Cards;
 
     public class Game
     {

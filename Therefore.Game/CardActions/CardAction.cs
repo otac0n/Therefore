@@ -1,6 +1,7 @@
-﻿namespace Therefore.Game
+﻿namespace Therefore.Game.CardActions
 {
     using System;
+    using Therefore.Game.Cards;
 
     public abstract class CardAction
     {
