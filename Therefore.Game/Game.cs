@@ -7,27 +7,44 @@
     using Therefore.Engine.Parser;
     using Therefore.Game.CardActions;
     using Therefore.Game.Cards;
+    using Therefore.Game.ScoringSystems;
 
     public class Game
     {
-        private Parser parser;
-        private Compiler compiler;
+        private readonly Parser parser;
+        private readonly Compiler compiler;
+        private readonly ScoringSystem scoringSystem;
 
         private GameState gameState;
 
-        public Game(IList<string> playerIds)
+        public Game(IList<string> playerIds, GameOptions gameOptions = null)
         {
             if (playerIds == null)
             {
                 throw new ArgumentNullException("playerIds");
             }
 
+            if (gameOptions == null || gameOptions.ScoringSystem == null)
+            {
+                this.scoringSystem = new AverageCardsScoringSystem();
+            }
+            else
+            {
+                scoringSystem = gameOptions.ScoringSystem;
+            }
+
+            this.parser = new Parser(gameOptions == null ? null : gameOptions.ParserOptions);
+            this.compiler = new Compiler(gameOptions == null ? null : gameOptions.CompilerOptions);
+
             this.gameState = new GameState(this, playerIds);
         }
 
         public string CurrentPlayer
         {
-            get { return this.gameState.CurrentPlayerId; }
+            get
+            {
+                return this.gameState.CurrentPlayerId;
+            }
         }
 
         public IDictionary<string, ReadOnlyCollection<Card>> Hands
@@ -42,12 +59,7 @@
         {
             get
             {
-                if (compiler == null)
-                {
-                    compiler = new Compiler();
-                }
-
-                return compiler;
+                return this.compiler;
             }
         }
 
@@ -55,15 +67,17 @@
         {
             get
             {
-                if (parser == null)
-                {
-                    parser = new Parser();
-                }
-
-                return parser;
+                return this.parser;
             }
         }
 
+        public ScoringSystem ScoringSystem
+        {
+            get
+            {
+                return this.scoringSystem;
+            }
+        }
 
         public void StartNewRound()
         {
