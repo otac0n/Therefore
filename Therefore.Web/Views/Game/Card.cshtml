@@ -1,0 +1,12 @@
+﻿@model Therefore.Game.Cards.Card
+
+<span>
+@if (Model is PlacementCard)
+{
+    @(((PlacementCard)Model).Symbol)
+}
+else
+{
+    @Model.GetType().Name
+}
+</span>

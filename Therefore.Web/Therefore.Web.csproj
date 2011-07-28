@@ -103,6 +103,7 @@
     <None Include="Scripts\jquery.validate.unobtrusive.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-ui.js" />
+    <Content Include="Views\Game\Card.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

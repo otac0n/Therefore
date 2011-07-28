@@ -10,3 +10,29 @@
 {
 }
 <h2>Play</h2>
+The current player is @Model.CurrentPlayer.
+<div>
+@foreach (var premise in Model.Proof)
+{
+    <div>
+    @foreach (var card in premise)
+    {
+        Html.RenderPartial("Card", card);
+    }
+    </div>
+}
+</div>
+
+<ul>
+@foreach (var playerId in Model.PlayerIds)
+{
+    <li>@playerId (score @Model.Scores[playerId])
+        <div>
+        @foreach (var card in @Model.Hands[playerId])
+        {
+            Html.RenderPartial("Card", card);
+        }
+        </div>
+    </li>
+}
+</ul>
