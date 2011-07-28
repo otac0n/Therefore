@@ -55,6 +55,31 @@
             }
         }
 
+        public IList<ReadOnlyCollection<PlacementCard>> Proof
+        {
+            get
+            {
+                return this.gameState.Proof;
+            }
+        }
+
+        public IList<string> PlayerIds
+        {
+            get
+            {
+                return this.gameState.PlayerIds;
+            }
+        }
+
+        public IDictionary<string, int> Scores
+        {
+            get
+            {
+                return this.gameState.Scores;
+            }
+        }
+
+
         internal Compiler Compiler
         {
             get

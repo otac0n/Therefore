@@ -101,6 +101,22 @@
             }
         }
 
+       public ReadOnlyCollection<string> PlayerIds
+        {
+            get
+            {
+                return this.playerIds;
+            }
+        }
+
+        public IDictionary<string, int> Scores
+        {
+            get
+            {
+                return this.scores;
+            }
+        }
+
         public bool IsValid
         {
             get
