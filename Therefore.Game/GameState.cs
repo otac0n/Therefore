@@ -127,7 +127,8 @@
 
                 try
                 {
-                    var parseTree = parser.Parse(string.Join(string.Empty, from c in premise select c.Symbol));
+                    var parseTree = parser.Parse(string.Join(string.Empty, from c in premise
+                                                                           select c.Symbol));
                     compiler.Compile(parseTree, nameTable);
                 }
                 catch (ParseException)
@@ -279,7 +280,7 @@
                 isRoundOver = true;
             }
 
-            return new GameState(
+            var newState = new GameState(
                 this.game,
                 this.playerIds,
                 deck.ToList().AsReadOnly(),
@@ -289,6 +290,35 @@
                 this.turn,
                 this.proof,
                 isRoundOver);
+
+            if (isRoundOver)
+            {
+                newState = ScoreGame(newState);
+            }
+
+            return newState;
+        }
+
+        private static GameState ScoreGame(GameState gameState)
+        {
+            var newScores = gameState.game.ScoringSystem.Score(gameState);
+            var scores = gameState.scores.ToDictionary(e => e.Key, e => e.Value);
+
+            foreach (var playerId in newScores.Keys)
+            {
+                scores[playerId] += newScores[playerId];
+            }
+
+            return new GameState(
+                gameState.game,
+                gameState.playerIds,
+                gameState.deck,
+                scores.AsReadOnly(),
+                gameState.hands,
+                gameState.dealer,
+                gameState.turn,
+                gameState.proof,
+                gameState.isRoundOver);
         }
 
         public GameState AdvanceTurn()
@@ -385,7 +415,7 @@
                 throw new InvalidOperationException("The round cannot end because the current game state is invalid.");
             }
 
-            return new GameState(
+            var newState = new GameState(
                 this.game,
                 this.playerIds,
                 this.deck,
@@ -395,6 +425,8 @@
                 this.turn,
                 this.proof,
                 true);
+
+            return ScoreGame(newState);
         }
     }
 }
