@@ -21,7 +21,7 @@
         private readonly ReadOnlyDictionary<string, ReadOnlyCollection<Card>> hands;
         private readonly int dealer;
         private readonly int turn;
-        private readonly Premise[] proof;
+        private readonly ReadOnlyCollection<Premise> proof;
         private readonly bool isRoundOver;
 
         public GameState(Game game, IList<string> playerIds)
@@ -45,7 +45,7 @@
             this.dealer = turn;
             this.turn = turn;
             this.proof = (from i in Enumerable.Range(0, 4)
-                          select new Premise(new List<PlacementCard>())).ToArray();
+                          select new Premise(new List<PlacementCard>())).ToList().AsReadOnly();
             this.isRoundOver = false;
         }
 
@@ -57,7 +57,7 @@
             ReadOnlyDictionary<string, ReadOnlyCollection<Card>> hands,
             int dealer,
             int turn,
-            Premise[] proof,
+            ReadOnlyCollection<Premise> proof,
             bool isRoundOver)
         {
             if (game == null)
@@ -97,7 +97,7 @@
         {
             get
             {
-                return this.proof.ToList().AsReadOnly();
+                return this.proof;
             }
         }
 
@@ -192,7 +192,7 @@
                 hands.ToDictionary(h => h.Key, h => h.Value.AsReadOnly()).AsReadOnly(),
                 turn,
                 turn,
-                new Premise[this.proof.Length],
+                new Premise[this.proof.Count].ToList().AsReadOnly(),
                 false);
         }
 
@@ -327,7 +327,7 @@
                 this.hands,
                 this.dealer,
                 this.turn,
-                proof.Select(p => p.AsReadOnly()).ToArray(),
+                proof.Select(p => p.AsReadOnly()).ToList().AsReadOnly(),
                 this.isRoundOver);
         }
 
@@ -369,7 +369,7 @@
                 this.hands,
                 this.dealer,
                 this.turn,
-                proof.Select(p => p.AsReadOnly()).ToArray(),
+                proof.Select(p => p.AsReadOnly()).ToList().AsReadOnly(),
                 this.isRoundOver);
         }
 
