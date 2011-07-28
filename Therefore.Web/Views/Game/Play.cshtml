@@ -1,90 +1,12 @@
-﻿@model Therefore.Web.Models.GameBoard
+﻿@model Therefore.Game.Game
 @{
     ViewBag.Title = "Play";
 }
 @section intellisense
 {
     <script src="../../Scripts/jquery-1.4.4-vsdoc.js" type="text/javascript"></script>
-    <script src="../../Scripts/Therefore.Client.js" type="text/javascript"></script>
 }
 @section headers
 {
-    <script src="@Url.Content("~/Scripts/Therefore.Client.js")" type="text/javascript"></script>
-    <script type="text/javascript"> Therefore.rootUrl = "@Url.Content("~/")"; </script>
-    <script type="text/javascript">
-        $(function () {
-            $(".premise-line input").change(function () {
-                var $this = $(this);
-                Therefore.parse($this.val(), function (tree) {
-                    var contents = Therefore.renderTree(tree);
-                    $("#" + $this.attr("id") + "Rendered").empty().append(contents);
-                });
-            });
-
-            $(".premise-line input").change();
-        });
-    </script>
-    <style type="text/css">
-        .variable-node, .binary-operator-node, .unary-operator-node, .parenthesis-node
-        {
-            display: inline-block;
-            margin: 2px 5px;
-            border: 1px solid silver;
-        }
-
-        .variable-node
-        {
-            font-weight: bold;
-            border: none;
-        }
-    </style>
 }
 <h2>Play</h2>
-
-@using (Html.BeginForm("Play", "Game", FormMethod.Post, new { autocomplete = "off" }))
-{
-  <table>
-    @for (int i = 0; i < Model.Premises.Count; i++)
-    {
-    <tr><td class="premise-line">@Html.TextBoxFor(m => m.Premises[i]) @Html.ValidationMessageFor(m => m.Premises[i])</td><td class="premise-rendered" id="Premises_@(i)_Rendered"></td></tr>
-    }
-  </table>
-  <button type="submit">Check</button>
-
-  if (Model.Results == null)
-  {
-  <div class="error-text">Paradox or Syntax Error</div>
-  }
-  else
-  {
-  <dl>
-    @foreach (var result in Model.Results)
-    {
-      <dt>@result.Key</dt>
-      <dd>@(result.Value == null ? "(unknown)" : (result.Value.Value ? "Exists" : "Doesn't Exist"))</dd>
-    }
-  </dl>
-  }
-}
-
-@if (ViewBag.DebugInfo != null)
-{
-<div id="debug-container">
-    <a href="#" id="toggle-debug">debug info</a>
-    <dl id="debug-info" style="display : none;">
-      @foreach (var entry in ViewBag.DebugInfo)
-      {
-      <dt>@entry.Key</dt>
-      <dd>@entry.Value</dd>
-      }
-    </dl>
-</div>
-
-<script>
-    $(function () {
-        $("#toggle-debug").click(function () {
-            $("#debug-info").toggle();
-        });
-    });
-</script>
-}

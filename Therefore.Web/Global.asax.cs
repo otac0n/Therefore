@@ -6,6 +6,9 @@
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        private static object syncRoot = new object();
+        private static int gameId = 1;
+
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
@@ -28,6 +31,16 @@
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+        }
+
+        public static int GetNextGameId()
+        {
+            lock (syncRoot)
+            {
+                var nextId = gameId;
+                gameId++;
+                return nextId;
+            }
         }
     }
 }

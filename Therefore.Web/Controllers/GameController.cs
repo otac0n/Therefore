@@ -4,12 +4,8 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using System.Web.Script.Serialization;
-    using Therefore.Engine;
-    using Therefore.Engine.Compiler;
-    using Therefore.Engine.Compiler.Constraints;
-    using Therefore.Engine.Expressions;
     using Therefore.Engine.Parser;
-    using Therefore.Web.Models;
+    using Therefore.Game;
 
     public class GameController : Controller
     {
@@ -18,102 +14,21 @@
             return View();
         }
 
-        public ActionResult Play()
+        public ActionResult New()
         {
-            var model = new GameBoard
-            {
-                Premises = new string[4],
-                Results = new Dictionary<string, bool?>
-                {
-                    { "A", null },
-                    { "B", null },
-                    { "C", null },
-                    { "D", null }
-                }
-            };
+            var gameId = MvcApplication.GetNextGameId();
+            var cacheKey = "Game" + gameId;
+            var game = new Game(new[] { "A", "B", "C", "D" });
+            HttpContext.Cache[cacheKey] = game;
 
-            return View(model);
+            return RedirectToAction("Play", new { id = gameId });
         }
 
-        [HttpPost]
-        public ActionResult Play(GameBoard board)
+        public ActionResult Play(int id)
         {
-            Expression accumulator = null;
-            var nameTable = new List<string> { "A", "B", "C", "D" };
-            var debugInfo = new Dictionary<string, object>();
-            ViewBag.DebugInfo = debugInfo;
-
-            for (int i = 0; i < board.Premises.Count; i++)
-            {
-                var key = "Premises[" + i + "]";
-                var premiseText = board.Premises[i];
-
-                if (string.IsNullOrWhiteSpace(premiseText))
-                {
-                    continue;
-                }
-
-                try
-                {
-                    var parser = new Parser();
-                    var premiseTree = parser.Parse(premiseText);
-                    debugInfo[key + " Parse Tree"] = ToJson(premiseTree);
-
-                    var comparer = StringComparer.OrdinalIgnoreCase;
-                    var compilerOptions = new CompilerOptions
-                    {
-                        Constraints = new Constraint[] {
-                            new ParenthesizedNotConstraint(),
-                            new SpecificVariablesConstraint(new[] { "A", "B", "C", "D" }, comparer),
-                        },
-                        VariableNameComparer = comparer,
-                    };
-
-                    var compiler = new Compiler(compilerOptions);
-                    var premiseExpr = compiler.Compile(premiseTree, nameTable);
-                    debugInfo[key + " Expression Tree"] = premiseExpr;
-
-                    accumulator = accumulator == null
-                        ? premiseExpr
-                        : new AndExpression(premiseExpr, accumulator);
-                }
-                catch (ParseException ex)
-                {
-                    ModelState.AddModelError(key, ex.Message);
-                    continue;
-                }
-                catch (CompileException ex)
-                {
-                    ModelState.AddModelError(key, ex.Message);
-                    continue;
-                }
-            }
-
-            if (ModelState.IsValid)
-            {
-                var namedResults = new Dictionary<string, bool?>();
-
-                if (accumulator != null)
-                {
-                    var results = Solver.Solve(accumulator, nameTable.Count);
-
-                    if (results == null)
-                    {
-                        namedResults = null;
-                    }
-                    else
-                    {
-                        for (int var = 0; var < nameTable.Count; var++)
-                        {
-                            namedResults[nameTable[var]] = results[var];
-                        }
-                    }
-                }
-
-                board.Results = namedResults;
-            }
-
-            return View(board);
+            var cacheKey = "Game" + id;
+            var game = (Game)HttpContext.Cache[cacheKey];
+            return View(game);
         }
 
         [HttpGet]

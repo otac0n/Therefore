@@ -78,7 +78,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\GameBoard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\Therefore.Client.js" />
     <Content Include="Web.config" />
@@ -105,7 +104,9 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-ui.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Therefore.Engine\Therefore.Engine.csproj">
       <Project>{22C8DAB3-7948-485E-B44B-F7819F50697A}</Project>
