@@ -1,6 +1,6 @@
 ﻿@model Therefore.Game.Cards.Card
 
-<span>
+<div class="card">
 @if (Model is PlacementCard)
 {
     @(((PlacementCard)Model).Symbol)
@@ -9,4 +9,4 @@ else
 {
     @Model.GetType().Name
 }
-</span>
+</div>
