@@ -83,10 +83,18 @@ textarea
     border: outset;
     -moz-border-radius: 6px;
     border-radius: 6px;
+
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: default;
 }
 
 .card .operator
 {
+    font-weight: bold;
     margin: 20px;
 }
 
@@ -114,6 +122,7 @@ textarea
     position: absolute;
     left: 10px;
     top: 10px;
+    font-weight: bold;
 }
 
 .card .corner2
@@ -121,6 +130,7 @@ textarea
     position: absolute;
     right: 10px;
     top: 10px;
+    font-weight: bold;
 }
 
 .card .corner3
@@ -128,6 +138,7 @@ textarea
     position: absolute;
     left: 10px;
     bottom: 10px;
+    font-weight: bold;
 }
 
 .card .corner4
@@ -135,6 +146,7 @@ textarea
     position: absolute;
     right: 10px;
     bottom: 10px;
+    font-weight: bold;
 }
 
 .card .wild
@@ -174,4 +186,5 @@ textarea
     line-height: 24pt;
     top: 10px;
     left: 28px;
+    font-weight: bold;
 }

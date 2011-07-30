@@ -244,7 +244,7 @@
                 cards.Add(new PlacementCard("C"));
                 cards.Add(new PlacementCard("D"));
 
-                cards.Add(new PlacementCard("·"));
+                cards.Add(new PlacementCard("•"));
                 cards.Add(new PlacementCard("∨"));
                 cards.Add(new PlacementCard("⇒"));
                 cards.Add(new PlacementCard("~"));
@@ -261,7 +261,7 @@
             }
 
             cards.Add(new OptionCard("A", "B", "C", "D"));
-            cards.Add(new OptionCard("·", "∨", "⇒", "~"));
+            cards.Add(new OptionCard("•", "∨", "⇒", "~"));
 
             var deck = new Stack<Card>();
             var rand = new Random();

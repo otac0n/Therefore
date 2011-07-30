@@ -1,9 +1,8 @@
 ﻿namespace Therefore.Engine.Parser
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
-    using Therefore.Engine.Expressions;
+    using System.Linq;
     using Therefore.Engine.Parser.OperatorTypes;
 
     public sealed class Parser
@@ -16,7 +15,7 @@
             {
                 this.binaryOperators = new OperatorDescriptorList()
                 {
-                    { AndOperatorType.Instance, OperatorAssociativity.LeftAssociative, "&", "∧", "·" },
+                    { AndOperatorType.Instance, OperatorAssociativity.LeftAssociative, "&", "∧", "·", "∙", "•"},
                     { OrOperatorType.Instance, OperatorAssociativity.LeftAssociative, "|", "∨", "+" },
                     { ThenOperatorType.Instance, OperatorAssociativity.LeftAssociative, ">", "->", "→", "⇒", "⊃" },
                 };
