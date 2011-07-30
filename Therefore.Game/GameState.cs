@@ -253,9 +253,11 @@
                 cards.Add(new ExsculpoCard());
             }
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 3; i++)
             {
                 cards.Add(new OptionCard("(", ")"));
+                cards.Add(new OptionCard("(", ")"));
+                cards.Add(new ErgoCard());
             }
 
             cards.Add(new OptionCard("A", "B", "C", "D"));
