@@ -52,6 +52,11 @@ else if (Model is ExsculpoCard)
 {
     <span class="exsculpo">Exsculpo!</span>
 }
+else if (Model is ErgoCard)
+{
+    <span class="ergosymbol">∴</span>
+    <span class="ergo">Therefore</span>
+}
 else
 {
     @Model.GetType().Name

@@ -65,7 +65,6 @@ textarea
 .card
 {
     font-family : Palatino Linotype, Serif;
-    border : raised;
     background: url(maple.jpg);
     color: #AD9454;
     font-size: 2em;
@@ -76,10 +75,12 @@ textarea
     display: inline-block;
     width: 80px;
     height: 80px;
+    position: relative;
 
     text-align: center;
     vertical-align: middle;
 
+    border: outset;
     -moz-border-radius: 6px;
     border-radius: 6px;
 }
@@ -156,4 +157,21 @@ textarea
 {
     font-size: 28pt;
     line-height: 80px;
+}
+
+.card .ergo
+{
+    position: absolute;
+    bottom: 20px;
+    left: 5.5px;
+    font-size: 12pt;
+    line-height: 12pt;
+}
+
+.card .ergosymbol
+{
+    position: absolute;
+    line-height: 24pt;
+    top: 10px;
+    left: 28px;
 }
