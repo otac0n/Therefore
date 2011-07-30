@@ -65,12 +65,95 @@ textarea
 .card
 {
     font-family : Palatino Linotype, Serif;
-    border : double 3px #000000;
-    width : 60px;
-    height : 90px;
+    border : raised;
+    background: url(maple.jpg);
+    color: #AD9454;
+    font-size: 2em;
+
+    text-shadow: 2px 2px 0px #FFE7AD;
+    filter: dropshadow(color=#FFE7AD,offX=2,offY=2);
+
     display: inline-block;
+    width: 80px;
+    height: 80px;
+
     text-align: center;
     vertical-align: middle;
+
     -moz-border-radius: 6px;
     border-radius: 6px;
+}
+
+.card .operator
+{
+    margin: 20px;
+}
+
+.card .descriptor
+{
+    line-height: 13px;
+}
+
+.card .variable
+{
+    font-size: 24pt;
+    line-height: 80px;
+}
+
+.card .corners
+{
+    position: relative;
+    height: 100%;
+    line-height: 14pt;
+    font-size: 12pt;
+}
+
+.card .corner1
+{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.card .corner2
+{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.card .corner3
+{
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}
+
+.card .corner4
+{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.card .wild
+{
+    text-align: center;
+    font-size: 14pt;
+    line-height: 80px;
+}
+
+.card .exsculpo
+{
+    display: block;
+    font-size: 12pt;
+    line-height: 80px;
+    -moz-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.card .parens
+{
+    font-size: 28pt;
+    line-height: 80px;
 }

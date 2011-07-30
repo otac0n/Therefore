@@ -1,9 +1,56 @@
 ﻿@model Therefore.Game.Cards.Card
 
-<div class="card">
+<div class="card" style="background-position: @Html.Random(100)%, @Html.Random(100)%">
 @if (Model is PlacementCard)
 {
-    @(((PlacementCard)Model).Symbol)
+    var symbol = ((PlacementCard)Model).Symbol;
+    if (symbol == "~")
+    {
+        <span class="operator">@symbol</span><br />
+        <span class="descriptor">Not</span>
+    }
+    else if (symbol == "·")
+    {
+        <span class="operator">@symbol</span><br />
+        <span class="descriptor">And</span>
+    }
+    else if (symbol == "∨")
+    {
+        <span class="operator">@symbol</span><br />
+        <span class="descriptor">Or</span>
+    }
+    else if (symbol == "⇒")
+    {
+        <span class="operator">@symbol</span><br />
+        <span class="descriptor">Then</span>
+    }
+    else
+    {
+        <span class="variable">@symbol</span>
+    }
+}
+else if (Model is OptionCard)
+{
+    var symbols = ((OptionCard)Model).Symbols;
+    var count = symbols.Count;
+    <div class="corners">
+    @for (int i = 0; i < count; i++)
+    {
+        <span class="corner@((3 * i / (count - 1)) + 1)">@symbols[i]</span>
+    }
+    @if (symbols.First() == "(")
+    {
+        <span class="parens">(</span>
+    }
+    else
+    {
+        <span class="wild">Wild</span>
+    }
+    </div>
+}
+else if (Model is ExsculpoCard)
+{
+    <span class="exsculpo">Exsculpo!</span>
 }
 else
 {
