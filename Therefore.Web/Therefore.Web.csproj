@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="HtmlHelpers.cs" />
+    <Content Include="Content\dark-wood-1.jpg" />
     <Content Include="Content\maple.jpg" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\jquery-ui.css" />
