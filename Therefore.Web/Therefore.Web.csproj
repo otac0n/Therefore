@@ -62,6 +62,7 @@
     <Compile Include="HtmlHelpers.cs" />
     <Content Include="Content\dark-wood-1.jpg" />
     <Content Include="Content\maple.jpg" />
+    <Content Include="Content\Play.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\jquery-ui.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
