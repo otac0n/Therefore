@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Therefore.Engine", "Therefore.Engine\Therefore.Engine.csproj", "{22C8DAB3-7948-485E-B44B-F7819F50697A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Therefore.Web", "Therefore.Web\Therefore.Web.csproj", "{423E3565-34A3-49D9-9A64-6D7EE0ED813B}"
