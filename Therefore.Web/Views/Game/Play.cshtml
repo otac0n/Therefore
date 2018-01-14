@@ -8,6 +8,7 @@
 }
 @section headers
 {
+    <link href="@Url.Content("~/Content/Play.css")" rel="stylesheet" type="text/css" />
 }
 <h2>Play</h2>
 The current player is @Model.CurrentPlayer.
@@ -36,3 +37,8 @@ The current player is @Model.CurrentPlayer.
     </li>
 }
 </ul>
+
+<div id="background">
+    <img src="@Url.Content("~/Content/dark-wood-1.jpg")" class="stretch" alt="" />
+</div>
+
